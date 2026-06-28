@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Abdellah Rahmani</title>
+<meta name="description" content="Abdellah Rahmani — PhD candidate at EPFL working on efficient AI reasoning, causal structure learning, and foundation models. Incoming Student Researcher at Google DeepMind." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F4F1EA;          /* cream paper */
+    --bg-soft: #FBFAF6;     /* lighter cream */
+    --card: #FCFBF7;        /* card surface */
+    --ink: #2C2A24;         /* headings (warm near-black) */
+    --body: #4F4B40;        /* body text */
+    --muted: #756F61;       /* captions / mono / secondary */
+    --olive: #C15F3C;       /* ACCENT now: links, numbers, tabs, buttons, frame, typed word */
+    --olive-bright: #D97757;/* accent hover (brighter Claude orange) */
+    --olive-deep: #A8492B;  /* accent tag backgrounds */
+    --olive-tint: rgba(193,95,60,0.13);
+    --olive-line: rgba(193,95,60,0.38);
+    --orange: #5F6E2E;       /* HEADINGS + BOLD now: olive green */
+    --line: rgba(44,42,36,0.12);
+    --shadow: rgba(60,56,40,0.12);
+    --font-sans: 'Source Serif 4', Georgia, 'Times New Roman', serif;   /* SERIF now: headings + body (Claude-style) */
+    --font-mono: 'Hanken Grotesk', -apple-system, system-ui, sans-serif; /* GROTESQUE now: small labels (Styrene-style) */
+    --nav-h: 100px;
+    --ease: cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--bg);
+    color: var(--body);
+    font-family: var(--font-sans);
+    font-size: 18px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--olive); text-decoration: none; transition: color .2s var(--ease); }
+  a:hover { color: var(--olive-bright); }
+  ::selection { background: var(--olive-tint); }
+
+  .num { font-family: var(--font-mono); color: var(--olive); font-weight: 400; font-size: 1rem; margin-right: 10px; }
+
+  /* ---------- Loader ---------- */
+  #loader { position: fixed; inset: 0; z-index: 100; background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .5s var(--ease), visibility .5s var(--ease); }
+  #loader.hide { opacity: 0; visibility: hidden; }
+  #loader .mono { width: 64px; height: 64px; border: 3px solid var(--olive); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--olive); font-family: var(--font-mono); font-weight: 600; font-size: 22px;
+    animation: pulse 1s var(--ease) infinite alternate; }
+  @keyframes pulse { from { transform: scale(.85); opacity: .55; } to { transform: scale(1); opacity: 1; } }
+
+  /* ---------- Header / Nav ---------- */
+  header { position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 50px; height: var(--nav-h);
+    background-color: rgba(244, 241, 234, 0.85); backdrop-filter: blur(10px);
+    transition: height .3s var(--ease), box-shadow .3s var(--ease); }
+  header.scrolled { height: 70px; box-shadow: 0 8px 24px -12px var(--shadow); }
+
+  .logo a { display: inline-flex; align-items: center; justify-content: center;
+    width: 42px; height: 42px; border: 2px solid var(--olive); color: var(--olive);
+    font-family: var(--font-mono); font-weight: 600; font-size: 15px; border-radius: 6px;
+    transition: background .25s var(--ease); }
+  .logo a:hover { background: var(--olive-tint); }
+
+  nav ul { display: flex; align-items: center; list-style: none; gap: 22px; }
+  nav li { font-family: var(--font-mono); font-size: 13px; }
+  nav li a { color: var(--ink); }
+  nav li a .num { font-size: 12px; margin-right: 5px; }
+  nav li a:hover, nav li a.active { color: var(--olive); }
+
+  .resume-btn { color: var(--olive); border: 1px solid var(--olive); border-radius: 6px;
+    padding: 9px 15px; font-family: var(--font-mono); font-size: 13px; transition: background .25s var(--ease); }
+  .resume-btn:hover { background: var(--olive-tint); }
+
+  .hamburger { display: none; background: none; border: 0; cursor: pointer; z-index: 60; }
+  .hamburger span { display: block; width: 28px; height: 2px; background: var(--olive); margin: 6px 0; transition: .3s var(--ease); }
+
+  /* ---------- Side rails ---------- */
+  .side { position: fixed; bottom: 0; z-index: 40; }
+  .side.left { left: 40px; }
+  .side.right { right: 40px; }
+  .side ul { display: flex; flex-direction: column; align-items: center; list-style: none; gap: 20px; margin: 0; }
+  .side ul::after { content: ''; display: block; width: 1px; height: 90px; background: var(--muted); margin-top: 4px; }
+  .side.left a { display: inline-block; transition: transform .2s var(--ease); }
+  .side.left a:hover { transform: translateY(-3px); }
+  .side.left svg { width: 20px; height: 20px; fill: var(--muted); transition: fill .2s var(--ease); }
+  .side.left a:hover svg { fill: var(--olive); }
+  .side.right .email { writing-mode: vertical-rl; font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em;
+    margin-bottom: 20px; color: var(--muted); display: inline-block; transition: transform .2s var(--ease), color .2s var(--ease); }
+  .side.right .email:hover { color: var(--olive); transform: translateY(-3px); }
+
+  /* ---------- Layout ---------- */
+  main { max-width: 1000px; margin: 0 auto; padding: 0 150px; }
+  section { padding: 100px 0; }
+  #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 0; }
+
+  .section-head { display: flex; align-items: center; margin-bottom: 40px; white-space: nowrap; }
+  .section-head h2 { font-size: clamp(24px, 5vw, 30px); color: var(--orange); font-weight: 600; }
+  .section-head::after { content: ''; flex: 1; height: 1px; max-width: 300px; background: var(--line); margin-left: 20px; }
+
+  .sub-head { color: var(--orange); font-size: 18px; font-weight: 600; font-family: var(--font-mono); margin: 40px 0 18px; }
+  .sub-head:first-of-type { margin-top: 0; }
+
+  /* ---------- Hero ---------- */
+  #hero .intro { color: var(--olive); font-family: var(--font-mono); font-size: 16px; margin-bottom: 22px; }
+  #hero h1 { font-size: clamp(40px, 8vw, 72px); color: var(--orange); font-weight: 700; line-height: 1.05; }
+  #hero h2 { font-size: clamp(30px, 6vw, 52px); color: var(--orange); font-weight: 700; line-height: 1.1; margin-top: 8px; min-height: 2.3em; }
+  #hero h2 #typed { color: var(--olive); }
+  #hero h2 .caret { color: var(--olive); font-weight: 400; margin-left: 1px; animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  #hero p { max-width: 580px; margin-top: 24px; }
+  #hero p .hl { color: var(--orange); font-weight: 500; }
+  #hero .cta { display: inline-block; margin-top: 40px; color: var(--olive); border: 1px solid var(--olive);
+    border-radius: 6px; padding: 18px 26px; font-family: var(--font-mono); font-size: 14px; transition: background .25s var(--ease); }
+  #hero .cta:hover { background: var(--olive-tint); }
+
+  /* hero entrance stagger */
+  .h-item { opacity: 0; transform: translateY(22px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+  body.loaded #hero .h-item { opacity: 1; transform: none; }
+  body.loaded #hero .h-item:nth-child(1) { transition-delay: .10s; }
+  body.loaded #hero .h-item:nth-child(2) { transition-delay: .20s; }
+  body.loaded #hero .h-item:nth-child(3) { transition-delay: .30s; }
+  body.loaded #hero .h-item:nth-child(4) { transition-delay: .40s; }
+  body.loaded #hero .h-item:nth-child(5) { transition-delay: .50s; }
+
+  /* ---------- About ---------- */
+  .about-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 50px; }
+  .about-grid p { margin-bottom: 15px; }
+  .about-grid strong { color: var(--orange); }
+  .skills { list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 10px; margin-top: 20px; font-family: var(--font-mono); font-size: 14px; }
+  .skills li { position: relative; padding-left: 20px; margin-bottom: 8px; }
+  .skills li::before { content: '▹'; position: absolute; left: 0; color: var(--olive); }
+  .aside-card { position: relative; }
+  .avatar-wrap { position: relative; max-width: 280px; }
+  .avatar-wrap .frame { position: relative; border-radius: 6px; overflow: hidden; background: var(--olive);
+    aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; }
+  .avatar-wrap .frame img { display: block; width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(100%) contrast(1.05); mix-blend-mode: multiply; transition: .25s var(--ease); }
+  .avatar-wrap:hover .frame img { filter: none; mix-blend-mode: normal; }
+  .avatar-wrap .monogram { position: absolute; font-family: var(--font-mono); font-weight: 600; font-size: 64px; color: var(--bg); }
+  .avatar-wrap::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--olive);
+    border-radius: 6px; transform: translate(18px, 18px); z-index: -1; transition: .25s var(--ease); }
+  .avatar-wrap:hover::after { transform: translate(12px, 12px); }
+  .facts { margin-top: 26px; font-family: var(--font-mono); font-size: 13px; color: var(--muted); list-style: none; }
+  .facts li { margin-bottom: 8px; padding-left: 18px; position: relative; }
+  .facts li::before { content: '▹'; position: absolute; left: 0; color: var(--olive); }
+
+  /* ---------- Publications ---------- */
+  .pub { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 26px 30px; margin-bottom: 20px;
+    transition: transform .25s var(--ease), box-shadow .25s var(--ease); }
+  .pub:hover { transform: translateY(-5px); box-shadow: 0 18px 30px -16px var(--shadow); }
+  .pub .venue { font-family: var(--font-mono); font-size: 12px; color: var(--olive); letter-spacing: .05em; }
+  .pub .tag { font-family: var(--font-mono); font-size: 12px; color: var(--bg); background: var(--olive-deep); border-radius: 4px; padding: 2px 8px; margin-left: 10px; font-weight: 500; }
+  .pub h3 { color: var(--orange); font-size: 20px; font-weight: 600; margin: 10px 0 6px; }
+  .pub .authors { font-size: 15px; color: var(--muted); margin-bottom: 10px; }
+  .pub .authors strong { color: var(--orange); }
+  .pub p.desc { font-size: 15px; margin-bottom: 14px; }
+  .pub .links { display: flex; gap: 16px; font-family: var(--font-mono); font-size: 13px; }
+  .pub .links .muted { color: var(--muted); cursor: default; }
+  .extra-note { font-size: 15px; color: var(--muted); margin-top: 24px; }
+  .extra-note strong { color: var(--ink); font-family: var(--font-mono); font-size: 13px; }
+
+  /* ---------- Experience (tabs) ---------- */
+  .exp { display: grid; grid-template-columns: max-content 1fr; gap: 0; }
+  .tabs { display: flex; flex-direction: column; border-left: 2px solid var(--line); }
+  .tabs button { background: none; border: 0; cursor: pointer; text-align: left; color: var(--muted);
+    font-family: var(--font-mono); font-size: 13px; padding: 12px 20px; border-left: 2px solid transparent;
+    margin-left: -2px; white-space: nowrap; transition: .2s var(--ease); }
+  .tabs button:hover { background: var(--olive-tint); color: var(--olive); }
+  .tabs button.active { color: var(--olive); border-left: 2px solid var(--olive); background: var(--olive-tint); }
+  .panel { padding: 4px 0 0 30px; display: none; }
+  .panel.active { display: block; animation: fade .4s var(--ease); }
+  .panel h3 { color: var(--orange); font-size: 20px; font-weight: 600; }
+  .panel h3 .at { color: var(--olive); }
+  .panel .when { font-family: var(--font-mono); font-size: 13px; color: var(--muted); margin: 4px 0 16px; }
+  .panel ul { list-style: none; }
+  .panel li { position: relative; padding-left: 26px; margin-bottom: 10px; font-size: 16px; }
+  .panel li::before { content: '▹'; position: absolute; left: 0; color: var(--olive); }
+
+  /* ---------- Education timeline ---------- */
+  .edu { list-style: none; }
+  .edu li { display: grid; grid-template-columns: 150px 1fr; gap: 20px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .edu li:last-child { border-bottom: 0; }
+  .edu .years { font-family: var(--font-mono); font-size: 13px; color: var(--olive); padding-top: 2px; }
+  .edu .deg { color: var(--orange); font-weight: 600; }
+  .edu .place { color: var(--muted); font-size: 15px; }
+
+  /* ---------- Honors columns ---------- */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .clist { list-style: none; }
+  .clist li { position: relative; padding-left: 22px; margin-bottom: 12px; font-size: 15px; }
+  .clist li::before { content: '▹'; position: absolute; left: 0; color: var(--olive); }
+  .clist li b { color: var(--orange); }
+
+  /* ---------- Blog (empty) ---------- */
+  .blog-empty { border: 1px dashed var(--olive-line); border-radius: 10px; padding: 56px 30px;
+    text-align: center; color: var(--muted); background: var(--card); }
+  .blog-icon { font-size: 30px; color: var(--olive); margin-bottom: 14px; line-height: 1; }
+  .blog-empty p { font-family: var(--font-mono); font-size: 14px; margin: 0; }
+  .blog-empty .sub { font-family: var(--font-sans); font-size: 15px; margin-top: 8px; color: var(--muted); }
+
+  /* ---------- Contact ---------- */
+  #contact { text-align: center; max-width: 600px; margin: 0 auto; }
+  #contact .num { display: block; margin-bottom: 16px; }
+  #contact h2 { font-size: clamp(38px, 7vw, 54px); color: var(--orange); font-weight: 700; }
+  #contact p { margin: 18px auto 40px; }
+  #contact .cta { display: inline-block; color: var(--olive); border: 1px solid var(--olive); border-radius: 6px; padding: 18px 30px; font-family: var(--font-mono); font-size: 14px; transition: background .25s var(--ease); }
+  #contact .cta:hover { background: var(--olive-tint); }
+
+  footer { text-align: center; padding: 30px 0 50px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+  footer a { font-size: 12px; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 1080px) { main { padding: 0 100px; } }
+  @media (max-width: 980px) {
+    .hamburger { display: block; }
+    nav ul { position: fixed; top: 0; right: -100%; height: 100vh; width: 78%; max-width: 320px;
+      flex-direction: column; justify-content: center; gap: 26px;
+      background: var(--bg-soft); box-shadow: -10px 0 30px -18px var(--shadow);
+      transition: right .3s var(--ease); padding: 50px; }
+    nav ul.open { right: 0; }
+    nav li { font-size: 15px; }
+  }
+  @media (max-width: 900px) {
+    main { padding: 0 50px; }
+    .about-grid { grid-template-columns: 1fr; }
+    .avatar-wrap { margin: 30px auto 0; }
+    .cols { grid-template-columns: 1fr; gap: 24px; }
+  }
+  @media (max-width: 768px) {
+    header { padding: 0 25px; }
+    .side { display: none; }
+    main { padding: 0 25px; }
+    .exp { grid-template-columns: 1fr; }
+    .tabs { flex-direction: row; overflow-x: auto; border-left: 0; border-bottom: 2px solid var(--line); }
+    .tabs button { border-left: 0; border-bottom: 2px solid transparent; margin-left: 0; }
+    .tabs button.active { border-left: 0; border-bottom: 2px solid var(--olive); }
+    .panel { padding: 20px 0 0; }
+    .edu li { grid-template-columns: 1fr; gap: 4px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .h-item, .reveal { opacity: 1 !important; transform: none !important; }
+    #loader { display: none; }
+    * { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loader"><div class="mono">AR</div></div>
+
+<header id="header">
+  <div class="logo"><a href="#hero" aria-label="home">AR</a></div>
+  <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+  <nav>
+    <ul id="navlist">
+      <li><a href="#about"><span class="num">01.</span>About</a></li>
+      <li><a href="#publications"><span class="num">02.</span>Publications</a></li>
+      <li><a href="#experience"><span class="num">03.</span>Experience</a></li>
+      <li><a href="#education"><span class="num">04.</span>Education</a></li>
+      <li><a href="#honors"><span class="num">05.</span>Honors</a></li>
+      <li><a href="#blog"><span class="num">06.</span>Blog</a></li>
+      <li><a href="#contact"><span class="num">07.</span>Contact</a></li>
+      <li><a class="resume-btn" href="resume.pdf" target="_blank" rel="noopener">CV</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- LEFT social rail -->
+<div class="side left">
+  <ul>
+    <li><a href="https://github.com/arahmani1" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.1-.4-.6-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.7-2.8 5.7-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg></a></li>
+    <li><a href="https://www.linkedin.com/in/arahmanii" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M19 0h-14a5 5 0 0 0-5 5v14a5 5 0 0 0 5 5h14a5 5 0 0 0 5-5v-14a5 5 0 0 0-5-5zM8 19H5V8h3v11zM6.5 6.7a1.8 1.8 0 1 1 0-3.5 1.8 1.8 0 0 1 0 3.5zM20 19h-3v-5.6c0-1.3-.5-2.2-1.7-2.2a1.8 1.8 0 0 0-1.7 1.2c-.1.2-.1.5-.1.8V19h-3V8h3v1.3a3 3 0 0 1 2.7-1.5c2 0 3.5 1.3 3.5 4.1V19z"/></svg></a></li>
+    <li><a href="https://scholar.google.com/citations?user=YOUR_SCHOLAR_ID" target="_blank" rel="noopener" aria-label="Google Scholar">
+      <svg viewBox="0 0 24 24"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.84 3.7A8 8 0 0 1 12 9a8 8 0 0 1 7.16 4.2L24 9.5z"/></svg></a></li>
+    <li><a href="https://people.epfl.ch/abdellah.rahmani" target="_blank" rel="noopener" aria-label="EPFL page">
+      <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 2c.7 0 1.8 1.2 2.5 3.6.2.7.4 1.5.5 2.4H9c.1-.9.3-1.7.5-2.4C10.2 5.2 11.3 4 12 4zM8.6 4.7C8.1 5.9 7.7 7.4 7.5 9H4.6a8 8 0 0 1 4-4.3zM4.1 11h3.2c-.1.7-.1 1.3-.1 2s0 1.3.1 2H4.1a8 8 0 0 1 0-4zm.5 6h2.9c.2 1.6.6 3.1 1.1 4.3a8 8 0 0 1-4-4.3zM12 20c-.7 0-1.8-1.2-2.5-3.6-.2-.7-.4-1.5-.5-2.4h6c-.1.9-.3 1.7-.5 2.4C13.8 18.8 12.7 20 12 20zm3.4-.7c.5-1.2.9-2.7 1.1-4.3h2.9a8 8 0 0 1-4 4.3zM16.7 13c.1-.7.1-1.3.1-2s0-1.3-.1-2h3.2a8 8 0 0 1 0 4h-3.2zm-.2-6c-.2-1.6-.6-3.1-1.1-4.3a8 8 0 0 1 4 4.3h-2.9z"/></svg></a></li>
+  </ul>
+</div>
+
+<!-- RIGHT email rail -->
+<div class="side right">
+  <a class="email" href="mailto:abdellah.rahmani@epfl.ch">abdellah.rahmani@epfl.ch</a>
+</div>
+
+<main>
+  <!-- HERO -->
+  <section id="hero">
+    <p class="intro h-item">Hi, my name is</p>
+    <h1 class="h-item">Abdellah Rahmani.</h1>
+    <h2 class="h-item">I make AI <span id="typed"></span><span class="caret">|</span></h2>
+    <p class="h-item">I'm a PhD candidate at <span class="hl">EPFL</span> advised by Pascal Frossard, and an incoming Student Researcher at <span class="hl">Google DeepMind</span>. My work studies how sequence models should structure and allocate their computation — from causal structure learning in time series to dynamic routing and test-time scaling in foundation models.</p>
+    <a class="cta h-item" href="#publications">View my work</a>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="reveal">
+    <div class="section-head"><h2><span class="num">01.</span>About Me</h2></div>
+    <div class="about-grid">
+      <div>
+        <p>Hello! I'm Abdellah, a PhD candidate in Electrical Engineering at <a href="https://www.epfl.ch" target="_blank" rel="noopener">EPFL</a>, advised by Prof. Pascal Frossard in the Signal Processing Laboratory (LTS4), and an incoming Student Researcher at <a href="https://deepmind.google" target="_blank" rel="noopener">Google DeepMind</a> in London. My research studies how sequence models should structure and allocate their computation.</p>
+        <p>My early work — <strong>Meta-GNN</strong> — personalizes an epileptic-seizure detector to each patient from only a few adaptation steps. Asking where that efficiency comes from led me to structure: through the <strong>CASTOR</strong>, <strong>FANTOM</strong>, and <strong>Cheesefill</strong> frameworks I learn the causal structure underlying multivariate time series, even when the data is non-stationary or has missing values.</p>
+        <p>More recently, I bring conditional structure to foundation models — building deep recurrent architectures with dynamic routing and test-time scaling, so a model's computation grows with the difficulty of the problem it's reasoning about.</p>
+        <p>A few topics I work on:</p>
+        <ul class="skills">
+          <li>Causal structure learning</li>
+          <li>Time-series modeling</li>
+          <li>Dynamic routing &amp; MoE</li>
+          <li>Test-time scaling</li>
+          <li>Foundation models &amp; LLMs</li>
+          <li>Meta-learning</li>
+        </ul>
+        <p style="margin-top:20px;font-size:16px;">Outside research, I'm a part-time rapper and writer, and I play football, padel, and swim.</p>
+      </div>
+      <div class="aside-card">
+        <div class="avatar-wrap">
+          <div class="frame">
+            <span class="monogram">AR</span>
+            <img src="me.jpg" alt="Portrait of Abdellah Rahmani" onerror="this.style.display='none'" />
+          </div>
+        </div>
+        <ul class="facts">
+          <li>Based in Lausanne, Switzerland</li>
+          <li>Incoming @ Google DeepMind</li>
+          <li>Languages: Arabic, English, French</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PUBLICATIONS -->
+  <section id="publications" class="reveal">
+    <div class="section-head"><h2><span class="num">02.</span>Publications</h2></div>
+
+    <div class="pub">
+      <span class="venue">PREPRINT · 2026</span><span class="tag">Cheesefill</span>
+      <h3>Causal Heteroscedastic Structure Learning from Incomplete Temporal Data</h3>
+      <p class="authors"><strong>A. Rahmani</strong>, Pascal Frossard</p>
+      <p class="desc">Recovers the causal structure of multivariate time series when noise is heteroscedastic and observations are missing — the regime where most structure-learning methods break down.</p>
+      <div class="links"><span class="muted">Coming soon</span></div>
+    </div>
+
+    <div class="pub">
+      <span class="venue">NeurIPS · 2025</span><span class="tag">FANTOM</span>
+      <h3>A Flow-Based Approach for Dynamic Temporal Causal Models with Non-Gaussian or Heteroscedastic Noise</h3>
+      <p class="authors"><strong>A. Rahmani</strong>, Pascal Frossard</p>
+      <p class="desc">Uses normalizing flows to model dynamic temporal causal relationships under realistic, non-Gaussian and heteroscedastic noise.</p>
+      <div class="links"><a href="#" target="_blank" rel="noopener">Paper ↗</a></div>
+    </div>
+
+    <div class="pub">
+      <span class="venue">AISTATS · 2025</span><span class="tag">CASTOR</span>
+      <h3>Causal Temporal Regime Structure Learning</h3>
+      <p class="authors"><strong>A. Rahmani</strong>, Pascal Frossard</p>
+      <p class="desc">Jointly discovers distinct temporal regimes and the causal graph governing each, for non-stationary multivariate time series.</p>
+      <div class="links"><a href="#" target="_blank" rel="noopener">Paper ↗</a></div>
+    </div>
+
+    <div class="pub">
+      <span class="venue">ICASSP · 2023</span><span class="tag">Meta-GNN</span>
+      <h3>A Meta-GNN Approach to Personalized Seizure Detection and Classification</h3>
+      <p class="authors"><strong>A. Rahmani</strong>, Arun Venkitaraman, Pascal Frossard</p>
+      <p class="desc">A meta-learned graph neural network that adapts an epileptic-seizure detector to each patient from only a few examples.</p>
+      <div class="links"><a href="#" target="_blank" rel="noopener">Paper ↗</a></div>
+    </div>
+
+    <p class="extra-note">
+      <strong>SELECTED COMPETITIONS</strong><br>
+      3rd / 70 — Kaggle Data Challenge, DNA sequence classification with kernel methods (ENS Paris-Saclay, 2021) ·
+      1st / 10 — Kaggle Data Challenge, hand-gesture recognition (Centrale Lille, 2020). Full list on
+      <a href="https://scholar.google.com/citations?user=YOUR_SCHOLAR_ID" target="_blank" rel="noopener">Google Scholar</a>.
+    </p>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" class="reveal">
+    <div class="section-head"><h2><span class="num">03.</span>Experience</h2></div>
+    <div class="exp">
+      <div class="tabs" id="tabs">
+        <button class="active" data-tab="0">DeepMind</button>
+        <button data-tab="1">EPFL</button>
+        <button data-tab="2">Deezer</button>
+        <button data-tab="3">Silex</button>
+        <button data-tab="4">CRIStAL</button>
+        <button data-tab="5">Forafric</button>
+      </div>
+      <div class="panels" id="panels">
+        <div class="panel active">
+          <h3>Student Researcher <span class="at">@ Google DeepMind</span></h3>
+          <p class="when">Aug 2026 — Dec 2026 · London (incoming)</p>
+          <ul>
+            <li>Researching in-context and prequential learning for large language models.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Doctoral Researcher <span class="at">@ EPFL (LTS4)</span></h3>
+          <p class="when">Aug 2022 — Present · Lausanne</p>
+          <ul>
+            <li>Efficient AI reasoning across modalities, advised by Prof. Pascal Frossard.</li>
+            <li>Causal structure learning for non-stationary and incomplete temporal data.</li>
+            <li>Dynamic routing and test-time scaling for text and vision models.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Research Scientist Intern <span class="at">@ Deezer Research</span></h3>
+          <p class="when">Apr 2021 — Sep 2021 · Paris</p>
+          <ul>
+            <li>Improved podcast recommendations by leveraging users' music-listening patterns.</li>
+            <li>Built cross-domain recommendation methods using domain adaptation and meta-learning.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Applied Scientist Intern <span class="at">@ Silex France</span></h3>
+          <p class="when">Apr 2020 — Sep 2020 · Antibes</p>
+          <ul>
+            <li>Implemented unsupervised graph representation learning (Metapath2vec) for search.</li>
+            <li>Combined graph structure with semantic signals from product descriptions and queries (Neural IR meets graph embedding).</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Part-time Researcher <span class="at">@ CRIStAL</span></h3>
+          <p class="when">Oct 2019 — Mar 2020 · Lille</p>
+          <ul>
+            <li>Applied domain adaptation to deep models for image-manipulation detection, with Patrick Bas.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Data Science Intern <span class="at">@ Forafric</span></h3>
+          <p class="when">Apr 2019 — Aug 2019 · Casablanca</p>
+          <ul>
+            <li>Built crop-identification models from satellite imagery.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education" class="reveal">
+    <div class="section-head"><h2><span class="num">04.</span>Education</h2></div>
+    <ul class="edu">
+      <li>
+        <span class="years">2022 — Present</span>
+        <span><span class="deg">PhD, Electrical Engineering (AI &amp; Machine Learning)</span><br><span class="place">EPFL, Lausanne</span></span>
+      </li>
+      <li>
+        <span class="years">2020 — 2021</span>
+        <span><span class="deg">MSc — Mathematics, Vision, Learning (MVA), highest honors</span><br><span class="place">ENS Paris-Saclay</span></span>
+      </li>
+      <li>
+        <span class="years">2019 — 2020</span>
+        <span><span class="deg">Engineering — AI &amp; Data Science (top 10% of 280)</span><br><span class="place">École Centrale Lille</span></span>
+      </li>
+      <li>
+        <span class="years">2017 — 2019</span>
+        <span><span class="deg">MEng — Data Science &amp; AI</span><br><span class="place">École Centrale Casablanca</span></span>
+      </li>
+      <li>
+        <span class="years">2014 — 2017</span>
+        <span><span class="deg">Classes Préparatoires (rank 104 / 3000)</span><br><span class="place">Meknès</span></span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- HONORS, TEACHING & SERVICE -->
+  <section id="honors" class="reveal">
+    <div class="section-head"><h2><span class="num">05.</span>Honors, Teaching &amp; Service</h2></div>
+    <div class="cols">
+      <div>
+        <h3 class="sub-head">Awards</h3>
+        <ul class="clist">
+          <li><b>Doc.Mobility Grant</b> — 7,000 CHF, EPFL Doctoral School</li>
+          <li><b>3rd place</b> — My Thesis in 180 Seconds, EPFL EDEE</li>
+          <li><b>Master's Valorization Scholarship</b> — 10,000 CHF, EPFL LTS4</li>
+          <li><b>Top 10%</b> of 280 students — École Centrale Lille</li>
+        </ul>
+        <h3 class="sub-head">Service</h3>
+        <ul class="clist">
+          <li><b>Reviewer</b> — NeurIPS, ICASSP</li>
+          <li><b>Evaluator</b> — ELLIS PhD program</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="sub-head">Teaching (TA, EPFL)</h3>
+        <ul class="clist">
+          <li><b>Network Machine Learning</b> — Spring '23, '24, '25</li>
+          <li><b>Signal Processing</b> — Fall '25</li>
+          <li><b>Optimization</b> — Fall '23</li>
+          <li><b>Linear Algebra</b> — Fall '22</li>
+          <li>Supervised 2 student projects on representation learning from EEG data</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG (empty) -->
+  <section id="blog" class="reveal">
+    <div class="section-head"><h2><span class="num">06.</span>Blog</h2></div>
+    <div class="blog-empty">
+      <div class="blog-icon">✎</div>
+      <p>No posts yet.</p>
+      <p class="sub">Writing in progress — check back soon.</p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="reveal">
+    <span class="num">07. What's Next?</span>
+    <h2>Get In Touch</h2>
+    <p>I'm always happy to talk about efficient reasoning, causal structure learning, or foundation models — whether it's research, collaboration, or just to connect. My inbox is open.</p>
+    <a class="cta" href="mailto:abdellah.rahmani@epfl.ch">Say Hello</a>
+  </section>
+
+  <footer>
+    <a href="https://www.brittanychiang.com/" target="_blank" rel="noopener">Original theme designed by Brittany Chiang</a>
+    <p style="margin-top:6px;">Built by Abdellah Rahmani</p>
+  </footer>
+</main>
+
+<script>
+  // ----- Loader + hero entrance + typing -----
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var loader = document.getElementById('loader');
+  var typedEl = document.getElementById('typed');
+  var caret = document.querySelector('.caret');
+  var phrases = ["reason efficiently", "understand causality", "learn causal reasoning and structures"];
+
+  function runTyping(){
+    var ti = 0, ci = 0, deleting = false;
+    function tick(){
+      var w = phrases[ti];
+      if (!deleting) {
+        ci++;
+        typedEl.textContent = w.slice(0, ci);
+        if (ci === w.length) { deleting = true; return setTimeout(tick, 1600); }
+      } else {
+        ci--;
+        typedEl.textContent = w.slice(0, ci);
+        if (ci === 0) { deleting = false; ti = (ti + 1) % phrases.length; return setTimeout(tick, 350); }
+      }
+      setTimeout(tick, deleting ? 45 : 85);
+    }
+    tick();
+  }
+
+  if (prefersReduced) {
+    loader.style.display = 'none';
+    document.body.classList.add('loaded');
+    typedEl.textContent = phrases[0];
+    if (caret) caret.style.display = 'none';
+  } else {
+    setTimeout(function(){ loader.classList.add('hide'); document.body.classList.add('loaded'); runTyping(); }, 1100);
+  }
+
+  // ----- Shrink header on scroll -----
+  var header = document.getElementById('header');
+  window.addEventListener('scroll', function(){
+    header.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // ----- Mobile menu -----
+  var burger = document.getElementById('hamburger');
+  var navlist = document.getElementById('navlist');
+  burger.addEventListener('click', function(){ navlist.classList.toggle('open'); });
+  navlist.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ navlist.classList.remove('open'); });
+  });
+
+  // ----- Scroll-spy active nav -----
+  var sections = Array.prototype.slice.call(document.querySelectorAll('main section[id]'));
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('#navlist a[href^="#"]'));
+  var spy = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting) {
+        var id = e.target.id;
+        navLinks.forEach(function(l){ l.classList.toggle('active', l.getAttribute('href') === '#' + id); });
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(function(s){ spy.observe(s); });
+
+  // ----- Reveal on scroll -----
+  var reveal = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting) { e.target.classList.add('in'); reveal.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(function(el){ reveal.observe(el); });
+
+  // ----- Experience tabs -----
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('#tabs button'));
+  var panels = Array.prototype.slice.call(document.querySelectorAll('#panels .panel'));
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(x){ x.classList.remove('active'); });
+      panels.forEach(function(p){ p.classList.remove('active'); });
+      t.classList.add('active');
+      panels[+t.dataset.tab].classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
