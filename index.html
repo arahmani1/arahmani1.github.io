@@ -75,9 +75,21 @@
   .logo a canvas { display: block; image-rendering: pixelated; }
 
   /* ---------- Pixel mascot ---------- */
-  #cat { position: fixed; bottom: 8px; left: 0; z-index: 30; pointer-events: none; will-change: transform; }
-  #cat canvas { display: block; image-rendering: pixelated; }
-  @media (max-width: 600px) { #cat { display: none; } }
+  #mascot { position: fixed; bottom: 8px; left: 0; z-index: 30; pointer-events: none; will-change: transform; }
+  #mascot .row { display: flex; align-items: flex-end; gap: 6px; }
+  #mascot canvas { display: block; image-rendering: pixelated; }
+  #mascot #buddyCanvas { display: none; }
+  #mascot.has-buddy #buddyCanvas { display: block; animation: hop .55s var(--ease) infinite alternate; }
+  @keyframes hop { from { transform: translateY(0); } to { transform: translateY(-5px); } }
+  #mascot .bubble { max-width: 262px; margin: 0 0 10px 6px; padding: 9px 12px; position: relative;
+    background: var(--card); border: 2px solid var(--olive-line); border-radius: 8px;
+    font-family: var(--font-mono); font-size: 12.5px; line-height: 1.45; color: var(--body);
+    opacity: 0; transform: translateY(6px); transition: opacity .25s var(--ease), transform .25s var(--ease); }
+  #mascot .bubble::after { content: ''; position: absolute; left: 16px; bottom: -9px; width: 0; height: 0;
+    border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 9px solid var(--olive-line); }
+  #mascot.talking .bubble { opacity: 1; transform: none; }
+  [data-mascot] { cursor: help; }
+  @media (max-width: 700px) { #mascot { display: none; } }
 
   nav ul { display: flex; align-items: center; list-style: none; gap: 22px; }
   nav li { font-family: var(--font-mono); font-size: 13px; }
@@ -321,7 +333,7 @@
     <div class="section-head"><h2><span class="num">01.</span>About Me</h2></div>
     <div class="about-grid">
       <div>
-        <p>I am a PhD candidate at <a href="https://www.epfl.ch" target="_blank" rel="noopener">EPFL</a>, advised by Prof. <a href="https://people.epfl.ch/pascal.frossard" target="_blank" rel="noopener">Pascal Frossard</a>. My research studies how sequence models should structure and allocate their computation. My early work includes <strong>Meta-GNN</strong>, an efficient meta-learned model that personalizes to each epileptic patient from only a few adaptation steps. Asking where such efficiency ultimately comes from led me to structure: I developed the <strong>CASTOR</strong>, <strong>FANTOM</strong>, and <strong>Cheesefill</strong> frameworks to learn the causal structure underlying multivariate time series, in the challenging regime of non-stationary and missing data.</p>
+        <p>I am a PhD candidate at <a href="https://www.epfl.ch" target="_blank" rel="noopener">EPFL</a>, advised by Prof. <a href="https://people.epfl.ch/pascal.frossard" target="_blank" rel="noopener">Pascal Frossard</a>. My research studies how sequence models should structure and allocate their computation. My early work includes <strong>Meta-GNN</strong>, an efficient meta-learned model that personalizes to each epileptic patient from only a few adaptation steps. Asking where such efficiency ultimately comes from led me to structure: I developed the <strong data-mascot="beaver">CASTOR</strong>, <strong data-mascot="ghost">FANTOM</strong>, and <strong data-mascot="cheese">Cheesefill</strong> frameworks to learn the causal structure underlying multivariate time series, in the challenging regime of non-stationary and missing data.</p>
         <p>Currently, my research brings conditional structure to foundation models: I build deep recurrent architectures that leverage dynamic routing and test-time scaling, so that computation grows with the difficulty of the reasoning problem. I am also a Student Researcher at <a href="https://deepmind.google" target="_blank" rel="noopener">Google DeepMind</a> London, focusing on in-context and prequential learning for LLMs.</p>
         <p>Before joining EPFL, I completed my Master's degree at ENS Paris-Saclay (<a href="https://www.master-mva.com" target="_blank" rel="noopener">Mathematics, Vision, Learning: MVA</a>) and gained industry experience as a research intern at <a href="https://research.deezer.com" target="_blank" rel="noopener">Deezer Research</a>.</p>
         <p>A few topics I work on:</p>
@@ -355,7 +367,7 @@
     <div class="section-head"><h2><span class="num">02.</span>Publications</h2></div>
 
     <div class="pub">
-      <span class="venue">PREPRINT · 2026</span><span class="tag">Cheesefill</span>
+      <span class="venue">PREPRINT · 2026</span><span class="tag" data-mascot="cheese">Cheesefill</span>
       <h3>Causal Heteroscedastic Structure Learning from Incomplete Temporal Data</h3>
       <p class="authors"><strong>A. Rahmani</strong>, Pascal Frossard</p>
       <p class="desc">Recovers the causal structure of multivariate time series when noise is heteroscedastic and observations are missing — the regime where most structure-learning methods break down.</p>
@@ -363,7 +375,7 @@
     </div>
 
     <div class="pub">
-      <span class="venue">NeurIPS · 2025</span><span class="tag">FANTOM</span>
+      <span class="venue">NeurIPS · 2025</span><span class="tag" data-mascot="ghost">FANTOM</span>
       <h3>A Flow-Based Approach for Dynamic Temporal Causal Models with Non-Gaussian or Heteroscedastic Noise</h3>
       <p class="authors"><strong>A. Rahmani</strong>, Pascal Frossard</p>
       <p class="desc">Uses normalizing flows to model dynamic temporal causal relationships under realistic, non-Gaussian and heteroscedastic noise.</p>
@@ -371,7 +383,7 @@
     </div>
 
     <div class="pub">
-      <span class="venue">AISTATS · 2025</span><span class="tag">CASTOR</span>
+      <span class="venue">AISTATS · 2025</span><span class="tag" data-mascot="beaver">CASTOR</span>
       <h3>Causal Temporal Regime Structure Learning</h3>
       <p class="authors"><strong>A. Rahmani</strong>, Pascal Frossard</p>
       <p class="desc">Jointly discovers distinct temporal regimes and the causal graph governing each, for non-stationary multivariate time series.</p>
@@ -535,7 +547,10 @@
   </footer>
 </main>
 
-<div id="cat" aria-hidden="true"><canvas id="catCanvas"></canvas></div>
+<div id="mascot" aria-hidden="true">
+  <div class="bubble" id="bubble"></div>
+  <div class="row"><canvas id="meCanvas"></canvas><canvas id="buddyCanvas"></canvas></div>
+</div>
 
 <script>
   // ----- Loader + hero entrance + typing -----
@@ -658,91 +673,225 @@
     var logoCv = document.getElementById('logoCanvas');
     if (logoCv) paint(fit(logoCv, 11, 7, 2), LOGO, { '#': accent }, 2, 11, 7, false);
 
-    // --- cat ---
-    var catBox = document.getElementById('cat');
-    var catCv = document.getElementById('catCanvas');
-    if (!catBox || !catCv) return;
+    // --- pixel me ---
+    var box = document.getElementById('mascot');
+    var meCv = document.getElementById('meCanvas');
+    var buddyCv = document.getElementById('buddyCanvas');
+    var bubble = document.getElementById('bubble');
+    if (!box || !meCv) return;
 
-    var PAL = { o: '#06222B', b: '#C2D2D6', w: '#F2F8F9', e: '#06222B', n: '#E39BA8' };
-    var W = 16, H = 12, PX = 5;
+    var PAL = {
+      o: '#06222B', h: '#241C16', b: '#2E241B', s: '#D8A177', S: '#B57C4E', e: '#14100C',
+      j: '#33517A', v: '#C6B2E8', w: '#F2F2F0', p: '#363640',
+      g: '#DCE8EA', m: '#06222B', n: '#F2C14E', N: '#D9A227',
+      t: '#8A5A34', T: '#6B4326', r: '#5A3A22'
+    };
+    var W = 18, H = 20, PX = 4;
 
-    // head + ears (shared by every frame)
-    var TOP = [
-      '.........o...o..',
-      '........obo.obo.',
-      '........obbbbbbo',
-      '.......obbbbbbbo'
+    var HEAD = [
+      '......oooooo......',
+      '.....ohhhhhhho....',
+      '....ohhhhhhhhho...',
+      '....ohhssssshho...',
+      '....ohsssssssho...',
+      '....ohsesssesho...',
+      '....ohsssSsssho...',
+      '....ohbsssssbho...',
+      '.....obbbbbbbo....',
+      '......obbbbo......',
+      '......osssso......'
     ];
-    // face, tail and body — tail raised (default) or flicked to the side
-    var BODY = [
-      'obo....obebbebbo',
-      'obo....obbbwnwbo',
-      'obo...oobbbwwwbo',
-      'obbo..obbbbbbbbo',
-      '.obbbbbbbbbbbbbo',
-      '..obbbbbbbbbbbbo'
+    var TORSO = [
+      '....ojjjvvjjjo....',
+      '....ojjvwwvjjo....',
+      '....ojjjwwjjjo....',
+      '....ojjjwwjjjo....',
+      '....ojjjjjjjjo....',
+      '....ojjjjjjjjo....'
     ];
-    var BODY_FLICK = [
-      '.ob....obebbebbo',
-      '.ob....obbbwnwbo',
-      '.obo..oobbbwwwbo',
-      '.obbo.obbbbbbbbo',
-      '.obbbbbbbbbbbbbo',
-      '..obbbbbbbbbbbbo'
+    var LEGS       = ['....oppppppppo....', '....oppo..oppo....', '....owwo..owwo....'];
+    var LEGS_WIDE  = ['....oppppppppo....', '...oppo....oppo...', '...owwo....owwo...'];
+    var LEGS_TIGHT = ['....oppppppppo....', '.....oppoppo......', '.....owwowwo......'];
+
+    function stamp(grid, px){
+      var g = grid.slice();
+      for (var i = 0; i < px.length; i++){
+        var x = px[i][0], y = px[i][1];
+        g[y] = g[y].substring(0, x) + px[i][2] + g[y].substring(x + 1);
+      }
+      return g;
+    }
+    function body(legs){ return HEAD.concat(TORSO, legs); }
+
+    var ARM_L = [], ARM_R = [];
+    for (var ay = 11; ay <= 15; ay++){
+      ARM_L.push([1, ay, 'o'], [2, ay, 'j'], [3, ay, 'j']);
+      ARM_R.push([14, ay, 'j'], [15, ay, 'j'], [16, ay, 'o']);
+    }
+    ARM_L.push([1,16,'o'],[2,16,'s'],[3,16,'s'],[1,17,'o'],[2,17,'o'],[3,17,'o']);
+    ARM_R.push([14,16,'s'],[15,16,'s'],[16,16,'o'],[14,17,'o'],[15,17,'o'],[16,17,'o']);
+    // right arm raised, hand up beside the head
+    var ARM_UP = [[14,11,'j'],[15,11,'j'],[16,11,'o'],
+                  [14,10,'o'],[15,10,'j'],[16,10,'j'],[17,10,'o'],
+                  [14,9,'o'],[15,9,'j'],[16,9,'j'],[17,9,'o'],
+                  [14,8,'o'],[15,8,'s'],[16,8,'s'],[17,8,'o'],
+                  [14,7,'o'],[15,7,'s'],[16,7,'s'],[17,7,'o'],
+                  [15,6,'o'],[16,6,'o']];
+
+    function arms(g){ return stamp(stamp(g, ARM_L), ARM_R); }
+    var IDLE   = arms(body(LEGS));
+    var BLINK  = stamp(IDLE, [[7,5,'h'],[11,5,'h']]);
+    var WALK_A = arms(body(LEGS_WIDE));
+    var WALK_B = arms(body(LEGS_TIGHT));
+    var WAVE_A = stamp(stamp(body(LEGS), ARM_L), ARM_UP);
+    var WAVE_B = stamp(WAVE_A, [[14,7,'.'],[14,8,'.'],[17,7,'s'],[17,8,'s'],[15,6,'.'],[16,6,'o'],[17,6,'o']]);
+
+    var GHOST = [
+      '..................','..................',
+      '......oooooo......',
+      '.....oggggggo.....',
+      '....oggggggggo....',
+      '...oggggggggggo...',
+      '...oggeeggeeggo...',
+      '...oggeeggeeggo...',
+      '...oggggggggggo...',
+      '...ogggommogggo...',
+      '...oggggmmggggo...',
+      '...oggggggggggo...','...oggggggggggo...','...oggggggggggo...',
+      '...oggggggggggo...','...oggggggggggo...','...oggggggggggo...','...oggggggggggo...',
+      '...oggooggooggo...',
+      '...oo.oo..oo.oo...'
     ];
 
-    var WALK = [
-      TOP.concat(BODY, ['...obbo...obbo..', '...owwo...owwo..']),
-      TOP.concat(BODY, ['....obbo.obbo...', '....owwo.owwo...']),
-      TOP.concat(BODY, ['..obbo.....obbo.', '..owwo.....owwo.']),
-      TOP.concat(BODY, ['....obbo.obbo...', '....owwo.owwo...'])
+    var BEAVER = [
+      '..................','..................','..................',
+      '....oo.....oo.....',
+      '...otto...otto....',
+      '..ottttttttttto...',
+      '..ottttttttttto...',
+      '..ottetttttetto...',
+      '..ottttttttttto...',
+      '..ottttTTTTttto...',
+      '..otttwwwwwttto...',
+      '...ottttttttto....',
+      '..ottttttttttto...',
+      '..ottttttttttoooo.',
+      '..ottttttttttorrro',
+      '..ottttttttttorrro',
+      '..ottttttttttoooo.',
+      '...oTTo...oTTo....',
+      '..................','..................'
     ];
 
-    var SIT_LEGS = ['..obbbbbbbbbbbbo', '..owwooooo.owwo.'];
-    var SIT       = TOP.concat(BODY, SIT_LEGS);
-    var SIT_TAIL  = TOP.concat(BODY_FLICK, SIT_LEGS);
-    var SIT_BLINK = SIT.slice(); SIT_BLINK[4] = 'obo....obbbbbbbo';
+    var CHEESE = [
+      '......oo....',
+      '.....onno...',
+      '....onnnno..',
+      '...onnNnnno.',
+      '..onnnnnnnno',
+      '..onennennno',
+      '..onnnnnnnno',
+      '..onnnmmnnno',
+      '..onnNnnnNno',
+      '..onnnnnnnno',
+      '..oooooooooo'
+    ];
 
-    var ctx = fit(catCv, W, H, PX);
-    var spriteW = W * PX;
+    var ctx = fit(meCv, W, H, PX);
+    if (buddyCv) paint(fit(buddyCv, 12, 11, PX), CHEESE, PAL, PX, 12, 11, false);
 
-    var x = 60, dir = 1, state = 'walk', frame = 0, tFrame = 0, tState = 0, lastScroll = 0, bob = 0;
+    var HI    = "Hi! I'm Abdellah 👋";
+    var ABOUT = "I'm a PhD candidate at EPFL and a Student Researcher at Google DeepMind.";
+    var LINES = {
+      cheese: "Hi! I'm Cheesefill 🧀",
+      ghost:  "Boo! I'm FANTOM 👻",
+      beaver: "Castor — that's beaver in French 🦫"
+    };
+
+    var mode = 'wave', morph = null, x = 60, dir = 1, tAnim = 0, lastScroll = 0, bob = 0;
+    var bubbleUntil = 0, waveUntil = 0;
+
+    function say(text, ms){
+      bubble.textContent = text;
+      box.classList.add('talking');
+      bubbleUntil = ms ? performance.now() + ms : Infinity;
+      var lim = window.innerWidth - 300;          // keep the bubble on screen
+      if (x > lim) x = Math.max(12, lim);
+    }
+    function hush(){ box.classList.remove('talking'); bubbleUntil = 0; }
+
+    // hovering a project name morphs him (or summons the cheese)
+    Array.prototype.forEach.call(document.querySelectorAll('[data-mascot]'), function(el){
+      var kind = el.getAttribute('data-mascot');
+      el.addEventListener('mouseenter', function(){
+        morph = (kind === 'cheese') ? null : kind;
+        box.classList.toggle('has-buddy', kind === 'cheese');
+        tAnim = 0;
+        say(LINES[kind], 0);
+      });
+      el.addEventListener('mouseleave', function(){
+        morph = null; box.classList.remove('has-buddy'); hush();
+      });
+    });
 
     if (prefersReduced) {
-      catBox.style.transform = 'translateX(60px)';
-      paint(ctx, SIT, PAL, PX, W, H, false);
+      box.style.transform = 'translateX(60px)';
+      paint(ctx, IDLE, PAL, PX, W, H, false);
+      say(HI, 0);
       return;
     }
 
+    // he introduces himself as soon as the page opens
+    var prev = performance.now();
+    waveUntil = prev + 4000; lastScroll = prev;
+    say(HI, 4000);
+
     window.addEventListener('scroll', function(){
       lastScroll = performance.now();
-      if (state !== 'walk') { state = 'walk'; tFrame = 0; frame = 0; }
+      if (mode === 'idle' && !morph && !bubbleUntil) mode = 'walk';
     }, { passive: true });
 
-    var prev = performance.now();
-    lastScroll = prev;  // pace across the screen once on load, then settle
+    // ...and says what he does when you reach About
+    var about = document.getElementById('about');
+    if (about) {
+      var told = false;
+      new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting && !told) { told = true; mode = 'idle'; say(ABOUT, 7000); }
+          else if (!e.isIntersecting) { told = false; }
+        });
+      }, { threshold: 0.25 }).observe(about);
+    }
+
     function loop(now){
       var dt = Math.min(now - prev, 60); prev = now;
+      if (bubbleUntil && now > bubbleUntil) hush();
 
-      if (state === 'walk' && now - lastScroll > 2600) { state = 'sit'; tState = 0; }
+      if (mode === 'wave' && now > waveUntil) { mode = 'walk'; lastScroll = now; }
+      if (mode === 'walk' && now - lastScroll > 2600) mode = 'idle';
 
-      if (state === 'walk') {
-        x += dir * 0.042 * dt;
-        var maxX = window.innerWidth - spriteW - 20;
+      var moving = (mode === 'walk' && !morph && !bubbleUntil);
+      if (moving) {
+        x += dir * 0.038 * dt;
+        var maxX = window.innerWidth - W * PX - 20;
         if (x >= maxX) { x = maxX; dir = -1; }
         if (x <= 12) { x = 12; dir = 1; }
-        tFrame += dt;
-        if (tFrame > 120) { tFrame = 0; frame = (frame + 1) % WALK.length; bob = frame % 2; }
-        paint(ctx, WALK[frame], PAL, PX, W, H, dir < 0);
-      } else {
-        tState += dt;
-        var m = tState % 4200;
-        var g = m < 3000 ? SIT : (m < 3160 ? SIT_BLINK : (m < 3800 ? SIT_TAIL : SIT));
-        bob = 0;
-        paint(ctx, g, PAL, PX, W, H, dir < 0);
       }
 
-      catBox.style.transform = 'translate(' + Math.round(x) + 'px,' + (-bob) + 'px)';
+      tAnim += dt;
+      var g;
+      if (morph === 'ghost')        { g = GHOST;  bob = Math.floor(tAnim / 420) % 2 ? 2 : 0; }
+      else if (morph === 'beaver')  { g = BEAVER; bob = Math.floor(tAnim / 520) % 2; }
+      else if (mode === 'wave')     { g = Math.floor(tAnim / 250) % 2 ? WAVE_B : WAVE_A; bob = 0; }
+      else if (moving) {
+        var f = Math.floor(tAnim / 150) % 4;
+        g = (f === 1) ? WALK_A : (f === 3 ? WALK_B : IDLE);
+        bob = (f % 2) ? 1 : 0;
+      }
+      else { g = (tAnim % 4800 < 4600) ? IDLE : BLINK; bob = 0; }
+
+      paint(ctx, g, PAL, PX, W, H, false);
+      box.style.transform = 'translate(' + Math.round(x) + 'px,' + (-bob) + 'px)';
       requestAnimationFrame(loop);
     }
     requestAnimationFrame(loop);
