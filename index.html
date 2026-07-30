@@ -4,26 +4,26 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Abdellah Rahmani</title>
-<meta name="description" content="Abdellah Rahmani — PhD candidate at EPFL working on efficient AI reasoning, causal structure learning, and foundation models. Incoming Student Researcher at Google DeepMind." />
+<meta name="description" content="Abdellah Rahmani — PhD candidate at EPFL working on efficient AI reasoning, causal structure learning, and foundation models. Student Researcher at Google DeepMind." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --bg: #F4F1EA;          /* cream paper */
-    --bg-soft: #FBFAF6;     /* lighter cream */
-    --card: #FCFBF7;        /* card surface */
-    --ink: #2C2A24;         /* headings (warm near-black) */
-    --body: #4F4B40;        /* body text */
-    --muted: #756F61;       /* captions / mono / secondary */
-    --olive: #C15F3C;       /* ACCENT now: links, numbers, tabs, buttons, frame, typed word */
-    --olive-bright: #D97757;/* accent hover (brighter Claude orange) */
-    --olive-deep: #A8492B;  /* accent tag backgrounds */
-    --olive-tint: rgba(193,95,60,0.13);
-    --olive-line: rgba(193,95,60,0.38);
-    --orange: #5F6E2E;       /* HEADINGS + BOLD now: olive green */
-    --line: rgba(44,42,36,0.12);
-    --shadow: rgba(60,56,40,0.12);
+    --bg: #032F3C;          /* deep teal page background */
+    --bg-soft: #04394A;     /* raised surface (mobile menu) */
+    --card: #063C4D;        /* card surface */
+    --ink: #FFFFFF;         /* headings */
+    --body: #E6F1F3;        /* body text (white) */
+    --muted: #9DBAC1;       /* captions / mono / secondary */
+    --olive: #45C0C3;       /* ACCENT: links, numbers, tabs, buttons, frame, typed word */
+    --olive-bright: #7BDDDF;/* accent hover */
+    --olive-deep: #217B7E;  /* brand teal: solid fills, tags, frame */
+    --olive-tint: rgba(33,123,126,0.30);
+    --olive-line: rgba(69,192,195,0.45);
+    --orange: #FFFFFF;       /* HEADINGS + BOLD: white */
+    --line: rgba(255,255,255,0.14);
+    --shadow: rgba(0,0,0,0.55);
     --font-sans: 'Source Serif 4', Georgia, 'Times New Roman', serif;   /* SERIF now: headings + body (Claude-style) */
     --font-mono: 'Hanken Grotesk', -apple-system, system-ui, sans-serif; /* GROTESQUE now: small labels (Styrene-style) */
     --nav-h: 100px;
@@ -63,7 +63,7 @@
   header { position: fixed; top: 0; left: 0; right: 0; z-index: 50;
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 50px; height: var(--nav-h);
-    background-color: rgba(244, 241, 234, 0.85); backdrop-filter: blur(10px);
+    background-color: rgba(3, 47, 60, 0.85); backdrop-filter: blur(10px);
     transition: height .3s var(--ease), box-shadow .3s var(--ease); }
   header.scrolled { height: 70px; box-shadow: 0 8px 24px -12px var(--shadow); }
 
@@ -121,7 +121,7 @@
   @keyframes blink { 50% { opacity: 0; } }
   #hero p { max-width: 580px; margin-top: 24px; }
   #hero p .hl { color: var(--orange); font-weight: 500; }
-  #hero .cta { display: inline-block; margin-top: 40px; color: var(--olive); border: 1px solid var(--olive);
+  #hero .cta { display: inline-block; align-self: flex-start; margin-top: 40px; color: var(--olive); border: 1px solid var(--olive);
     border-radius: 6px; padding: 18px 26px; font-family: var(--font-mono); font-size: 14px; transition: background .25s var(--ease); }
   #hero .cta:hover { background: var(--olive-tint); }
 
@@ -143,10 +143,10 @@
   .skills li::before { content: '▹'; position: absolute; left: 0; color: var(--olive); }
   .aside-card { position: relative; }
   .avatar-wrap { position: relative; max-width: 280px; }
-  .avatar-wrap .frame { position: relative; border-radius: 6px; overflow: hidden; background: var(--olive);
+  .avatar-wrap .frame { position: relative; border-radius: 6px; overflow: hidden; background: var(--olive-deep);
     aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; }
   .avatar-wrap .frame img { display: block; width: 100%; height: 100%; object-fit: cover;
-    filter: grayscale(100%) contrast(1.05); mix-blend-mode: multiply; transition: .25s var(--ease); }
+    filter: grayscale(100%) contrast(1.05); mix-blend-mode: luminosity; transition: .25s var(--ease); }
   .avatar-wrap:hover .frame img { filter: none; mix-blend-mode: normal; }
   .avatar-wrap .monogram { position: absolute; font-family: var(--font-mono); font-weight: 600; font-size: 64px; color: var(--bg); }
   .avatar-wrap::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--olive);
@@ -161,7 +161,7 @@
     transition: transform .25s var(--ease), box-shadow .25s var(--ease); }
   .pub:hover { transform: translateY(-5px); box-shadow: 0 18px 30px -16px var(--shadow); }
   .pub .venue { font-family: var(--font-mono); font-size: 12px; color: var(--olive); letter-spacing: .05em; }
-  .pub .tag { font-family: var(--font-mono); font-size: 12px; color: var(--bg); background: var(--olive-deep); border-radius: 4px; padding: 2px 8px; margin-left: 10px; font-weight: 500; }
+  .pub .tag { font-family: var(--font-mono); font-size: 12px; color: #FFFFFF; background: var(--olive-deep); border-radius: 4px; padding: 2px 8px; margin-left: 10px; font-weight: 500; }
   .pub h3 { color: var(--orange); font-size: 20px; font-weight: 600; margin: 10px 0 6px; }
   .pub .authors { font-size: 15px; color: var(--muted); margin-bottom: 10px; }
   .pub .authors strong { color: var(--orange); }
@@ -308,7 +308,6 @@
     <p class="intro h-item">Hi, my name is</p>
     <h1 class="h-item">Abdellah Rahmani.</h1>
     <h2 class="h-item">I make AI <span id="typed"></span><span class="caret">|</span></h2>
-    <p class="h-item">I'm a PhD candidate at <span class="hl">EPFL</span> advised by Pascal Frossard, and an incoming Student Researcher at <span class="hl">Google DeepMind</span>. My work studies how sequence models should structure and allocate their computation — from causal structure learning in time series to dynamic routing and test-time scaling in foundation models.</p>
     <a class="cta h-item" href="#publications">View my work</a>
   </section>
 
@@ -317,9 +316,9 @@
     <div class="section-head"><h2><span class="num">01.</span>About Me</h2></div>
     <div class="about-grid">
       <div>
-        <p>Hello! I'm Abdellah, a PhD candidate in Electrical Engineering at <a href="https://www.epfl.ch" target="_blank" rel="noopener">EPFL</a>, advised by Prof. Pascal Frossard in the Signal Processing Laboratory (LTS4), and an incoming Student Researcher at <a href="https://deepmind.google" target="_blank" rel="noopener">Google DeepMind</a> in London. My research studies how sequence models should structure and allocate their computation.</p>
-        <p>My early work — <strong>Meta-GNN</strong> — personalizes an epileptic-seizure detector to each patient from only a few adaptation steps. Asking where that efficiency comes from led me to structure: through the <strong>CASTOR</strong>, <strong>FANTOM</strong>, and <strong>Cheesefill</strong> frameworks I learn the causal structure underlying multivariate time series, even when the data is non-stationary or has missing values.</p>
-        <p>More recently, I bring conditional structure to foundation models — building deep recurrent architectures with dynamic routing and test-time scaling, so a model's computation grows with the difficulty of the problem it's reasoning about.</p>
+        <p>I am a PhD candidate at <a href="https://www.epfl.ch" target="_blank" rel="noopener">EPFL</a>, advised by Prof. <a href="https://people.epfl.ch/pascal.frossard" target="_blank" rel="noopener">Pascal Frossard</a>. My research studies how sequence models should structure and allocate their computation. My early work includes <strong>Meta-GNN</strong>, an efficient meta-learned model that personalizes to each epileptic patient from only a few adaptation steps. Asking where such efficiency ultimately comes from led me to structure: I developed the <strong>CASTOR</strong>, <strong>FANTOM</strong>, and <strong>Cheesefill</strong> frameworks to learn the causal structure underlying multivariate time series, in the challenging regime of non-stationary and missing data.</p>
+        <p>Currently, my research brings conditional structure to foundation models: I build deep recurrent architectures that leverage dynamic routing and test-time scaling, so that computation grows with the difficulty of the reasoning problem. I am also a Student Researcher at <a href="https://deepmind.google" target="_blank" rel="noopener">Google DeepMind</a> London, focusing on in-context and prequential learning for LLMs.</p>
+        <p>Before joining EPFL, I completed my Master's degree at ENS Paris-Saclay (<a href="https://www.master-mva.com" target="_blank" rel="noopener">Mathematics, Vision, Learning: MVA</a>) and gained industry experience as a research intern at <a href="https://research.deezer.com" target="_blank" rel="noopener">Deezer Research</a>.</p>
         <p>A few topics I work on:</p>
         <ul class="skills">
           <li>Causal structure learning</li>
@@ -340,7 +339,7 @@
         </div>
         <ul class="facts">
           <li>Based in Lausanne, Switzerland</li>
-          <li>Incoming @ Google DeepMind</li>
+          <li>Student Researcher @ Google DeepMind, London</li>
           <li>Languages: Arabic, English, French</li>
         </ul>
       </div>
@@ -406,7 +405,7 @@
       <div class="panels" id="panels">
         <div class="panel active">
           <h3>Student Researcher <span class="at">@ Google DeepMind</span></h3>
-          <p class="when">Aug 2026 — Dec 2026 · London (incoming)</p>
+          <p class="when">Aug 2026 — Dec 2026 · London</p>
           <ul>
             <li>Researching in-context and prequential learning for large language models.</li>
           </ul>
