@@ -72,6 +72,12 @@
     font-family: var(--font-mono); font-weight: 600; font-size: 15px; border-radius: 6px;
     transition: background .25s var(--ease); }
   .logo a:hover { background: var(--olive-tint); }
+  .logo a canvas { display: block; image-rendering: pixelated; }
+
+  /* ---------- Pixel mascot ---------- */
+  #cat { position: fixed; bottom: 8px; left: 0; z-index: 30; pointer-events: none; will-change: transform; }
+  #cat canvas { display: block; image-rendering: pixelated; }
+  @media (max-width: 600px) { #cat { display: none; } }
 
   nav ul { display: flex; align-items: center; list-style: none; gap: 22px; }
   nav li { font-family: var(--font-mono); font-size: 13px; }
@@ -266,7 +272,7 @@
 <div id="loader"><div class="mono">AR</div></div>
 
 <header id="header">
-  <div class="logo"><a href="#hero" aria-label="home">AR</a></div>
+  <div class="logo"><a href="#hero" aria-label="home"><canvas id="logoCanvas" aria-hidden="true"></canvas></a></div>
   <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
   <nav>
     <ul id="navlist">
@@ -529,6 +535,8 @@
   </footer>
 </main>
 
+<div id="cat" aria-hidden="true"><canvas id="catCanvas"></canvas></div>
+
 <script>
   // ----- Loader + hero entrance + typing -----
   var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -610,6 +618,135 @@
       panels[+t.dataset.tab].classList.add('active');
     });
   });
+
+  // ----- Pixel art: monogram + walking cat -----
+  (function(){
+    var css = getComputedStyle(document.documentElement);
+    var accent = (css.getPropertyValue('--olive') || '').trim() || '#45C0C3';
+
+    function fit(cv, w, h, scale){
+      var dpr = window.devicePixelRatio || 1;
+      cv.width = w * scale * dpr; cv.height = h * scale * dpr;
+      cv.style.width = (w * scale) + 'px'; cv.style.height = (h * scale) + 'px';
+      var ctx = cv.getContext('2d');
+      ctx.scale(dpr, dpr); ctx.imageSmoothingEnabled = false;
+      return ctx;
+    }
+
+    function paint(ctx, grid, pal, scale, w, h, flip){
+      ctx.clearRect(0, 0, w * scale, h * scale);
+      for (var y = 0; y < grid.length; y++){
+        for (var x = 0; x < grid[y].length; x++){
+          var col = pal[grid[y].charAt(x)];
+          if (!col) continue;
+          ctx.fillStyle = col;
+          ctx.fillRect((flip ? w - 1 - x : x) * scale, y * scale, scale, scale);
+        }
+      }
+    }
+
+    // --- monogram ---
+    var LOGO = [
+      '.###..####.',
+      '#...#.#...#',
+      '#...#.#...#',
+      '#####.####.',
+      '#...#.#..#.',
+      '#...#.#...#',
+      '#...#.#...#'
+    ];
+    var logoCv = document.getElementById('logoCanvas');
+    if (logoCv) paint(fit(logoCv, 11, 7, 2), LOGO, { '#': accent }, 2, 11, 7, false);
+
+    // --- cat ---
+    var catBox = document.getElementById('cat');
+    var catCv = document.getElementById('catCanvas');
+    if (!catBox || !catCv) return;
+
+    var PAL = { o: '#06222B', b: '#C2D2D6', w: '#F2F8F9', e: '#06222B', n: '#E39BA8' };
+    var W = 16, H = 12, PX = 5;
+
+    // head + ears (shared by every frame)
+    var TOP = [
+      '.........o...o..',
+      '........obo.obo.',
+      '........obbbbbbo',
+      '.......obbbbbbbo'
+    ];
+    // face, tail and body — tail raised (default) or flicked to the side
+    var BODY = [
+      'obo....obebbebbo',
+      'obo....obbbwnwbo',
+      'obo...oobbbwwwbo',
+      'obbo..obbbbbbbbo',
+      '.obbbbbbbbbbbbbo',
+      '..obbbbbbbbbbbbo'
+    ];
+    var BODY_FLICK = [
+      '.ob....obebbebbo',
+      '.ob....obbbwnwbo',
+      '.obo..oobbbwwwbo',
+      '.obbo.obbbbbbbbo',
+      '.obbbbbbbbbbbbbo',
+      '..obbbbbbbbbbbbo'
+    ];
+
+    var WALK = [
+      TOP.concat(BODY, ['...obbo...obbo..', '...owwo...owwo..']),
+      TOP.concat(BODY, ['....obbo.obbo...', '....owwo.owwo...']),
+      TOP.concat(BODY, ['..obbo.....obbo.', '..owwo.....owwo.']),
+      TOP.concat(BODY, ['....obbo.obbo...', '....owwo.owwo...'])
+    ];
+
+    var SIT_LEGS = ['..obbbbbbbbbbbbo', '..owwooooo.owwo.'];
+    var SIT       = TOP.concat(BODY, SIT_LEGS);
+    var SIT_TAIL  = TOP.concat(BODY_FLICK, SIT_LEGS);
+    var SIT_BLINK = SIT.slice(); SIT_BLINK[4] = 'obo....obbbbbbbo';
+
+    var ctx = fit(catCv, W, H, PX);
+    var spriteW = W * PX;
+
+    var x = 60, dir = 1, state = 'walk', frame = 0, tFrame = 0, tState = 0, lastScroll = 0, bob = 0;
+
+    if (prefersReduced) {
+      catBox.style.transform = 'translateX(60px)';
+      paint(ctx, SIT, PAL, PX, W, H, false);
+      return;
+    }
+
+    window.addEventListener('scroll', function(){
+      lastScroll = performance.now();
+      if (state !== 'walk') { state = 'walk'; tFrame = 0; frame = 0; }
+    }, { passive: true });
+
+    var prev = performance.now();
+    lastScroll = prev;  // pace across the screen once on load, then settle
+    function loop(now){
+      var dt = Math.min(now - prev, 60); prev = now;
+
+      if (state === 'walk' && now - lastScroll > 2600) { state = 'sit'; tState = 0; }
+
+      if (state === 'walk') {
+        x += dir * 0.042 * dt;
+        var maxX = window.innerWidth - spriteW - 20;
+        if (x >= maxX) { x = maxX; dir = -1; }
+        if (x <= 12) { x = 12; dir = 1; }
+        tFrame += dt;
+        if (tFrame > 120) { tFrame = 0; frame = (frame + 1) % WALK.length; bob = frame % 2; }
+        paint(ctx, WALK[frame], PAL, PX, W, H, dir < 0);
+      } else {
+        tState += dt;
+        var m = tState % 4200;
+        var g = m < 3000 ? SIT : (m < 3160 ? SIT_BLINK : (m < 3800 ? SIT_TAIL : SIT));
+        bob = 0;
+        paint(ctx, g, PAL, PX, W, H, dir < 0);
+      }
+
+      catBox.style.transform = 'translate(' + Math.round(x) + 'px,' + (-bob) + 'px)';
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  })();
 </script>
 </body>
 </html>
