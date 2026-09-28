@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Abdellah Rahmani</title>
-<meta name="description" content="Abdellah Rahmani — PhD candidate at EPFL working on efficient AI reasoning, causal structure learning, and foundation models. Student Researcher at Google DeepMind." />
+<meta name="description" content="Abdellah Rahmani — EPFL PhD candidate and Google DeepMind Student Researcher studying adaptive computation, Library of Layers, and causal structure learning." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet" />
@@ -88,7 +88,9 @@
   #mascot .bubble::after { content: ''; position: absolute; left: 16px; bottom: -9px; width: 0; height: 0;
     border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 9px solid var(--olive-line); }
   #mascot.talking .bubble { opacity: 1; transform: none; }
-  [data-mascot] { cursor: help; }
+  [data-mascot] { cursor: pointer; }
+  a:focus-visible, button:focus-visible, [data-mascot]:focus-visible { outline: 2px solid var(--olive-bright); outline-offset: 5px; border-radius: 3px; }
+  strong[data-mascot] { text-decoration: underline dotted var(--olive-line); text-underline-offset: 5px; }
   @media (max-width: 700px) { #mascot { display: none; } }
 
   nav ul { display: flex; align-items: center; list-style: none; gap: 22px; }
@@ -120,7 +122,7 @@
 
   /* ---------- Layout ---------- */
   main { max-width: 1000px; margin: 0 auto; padding: 0 150px; }
-  section { padding: 100px 0; }
+  section { padding: 100px 0; scroll-margin-top: 80px; }
   #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 0; }
 
   .section-head { display: flex; align-items: center; margin-bottom: 40px; white-space: nowrap; }
@@ -169,9 +171,31 @@
   .avatar-wrap::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--olive);
     border-radius: 6px; transform: translate(18px, 18px); z-index: -1; transition: .25s var(--ease); }
   .avatar-wrap:hover::after { transform: translate(12px, 12px); }
+  .pixel-portrait { position: absolute; right: -14px; bottom: -14px; padding: 6px 8px;
+    background: var(--card); border: 1px solid var(--olive-line); border-radius: 6px; }
+  .pixel-portrait canvas { display: block; width: 64px; height: 80px; image-rendering: pixelated; }
   .facts { margin-top: 26px; font-family: var(--font-mono); font-size: 13px; color: var(--muted); list-style: none; }
   .facts li { margin-bottom: 8px; padding-left: 18px; position: relative; }
   .facts li::before { content: '▹'; position: absolute; left: 0; color: var(--olive); }
+
+  /* ---------- Research companions ---------- */
+  .companions { margin-top: 44px; padding-top: 28px; border-top: 1px solid var(--line); }
+  .companions .sub-head { margin: 0 0 6px; }
+  .companion-hint { font-family: var(--font-mono); font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .companion-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .companion { display: flex; flex-direction: column; align-items: center; padding: 14px 8px 16px;
+    border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--body);
+    font-family: var(--font-mono); transition: border-color .2s var(--ease), background .2s var(--ease); }
+  .companion:hover, .companion[aria-pressed="true"] { border-color: var(--olive); background: var(--bg-soft); }
+  .companion canvas { display: block; width: 96px; height: 120px; image-rendering: pixelated; margin-bottom: 8px; }
+  .companion strong { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .companion span { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .companion-quote { min-height: 76px; margin-top: 18px; padding: 12px 16px; border-left: 2px solid var(--olive); }
+  .companion-quote p { font-size: 16px; }
+  .companion-quote cite { display: block; font: normal 12px var(--font-mono); color: var(--muted); margin-top: 5px; }
+  .research-quote { margin: 22px 0; padding-left: 18px; border-left: 2px solid var(--olive); }
+  .research-quote p { font-size: 18px; }
+  .research-quote footer { padding: 8px 0 0; text-align: left; }
 
   /* ---------- Publications ---------- */
   .pub { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 26px 30px; margin-bottom: 20px;
@@ -270,12 +294,22 @@
     .tabs button.active { border-left: 0; border-bottom: 2px solid var(--olive); }
     .panel { padding: 20px 0 0; }
     .edu li { grid-template-columns: 1fr; gap: 4px; }
+    .section-head { white-space: normal; }
+    .section-head::after { min-width: 20px; }
+    .pub { padding: 22px; }
+    #hero { padding-top: 110px; padding-bottom: 50px; min-height: 100svh; }
+  }
+  @media (max-width: 600px) {
+    .companion-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .skills { grid-template-columns: 1fr; }
+    .companion-quote { min-height: 100px; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .h-item, .reveal { opacity: 1 !important; transform: none !important; }
     #loader { display: none; }
     * { animation: none !important; }
+    *, *::before, *::after { transition: none !important; }
   }
 </style>
 </head>
@@ -285,7 +319,7 @@
 
 <header id="header">
   <div class="logo"><a href="#hero" aria-label="home"><canvas id="logoCanvas" aria-hidden="true"></canvas></a></div>
-  <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+  <button class="hamburger" id="hamburger" aria-label="Open menu" aria-controls="navlist" aria-expanded="false"><span></span><span></span><span></span></button>
   <nav>
     <ul id="navlist">
       <li><a href="#about"><span class="num">01.</span>About</a></li>
@@ -307,7 +341,7 @@
       <svg viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.1-.4-.6-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.7-2.8 5.7-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg></a></li>
     <li><a href="https://www.linkedin.com/in/arahmanii" target="_blank" rel="noopener" aria-label="LinkedIn">
       <svg viewBox="0 0 24 24"><path d="M19 0h-14a5 5 0 0 0-5 5v14a5 5 0 0 0 5 5h14a5 5 0 0 0 5-5v-14a5 5 0 0 0-5-5zM8 19H5V8h3v11zM6.5 6.7a1.8 1.8 0 1 1 0-3.5 1.8 1.8 0 0 1 0 3.5zM20 19h-3v-5.6c0-1.3-.5-2.2-1.7-2.2a1.8 1.8 0 0 0-1.7 1.2c-.1.2-.1.5-.1.8V19h-3V8h3v1.3a3 3 0 0 1 2.7-1.5c2 0 3.5 1.3 3.5 4.1V19z"/></svg></a></li>
-    <li><a href="https://scholar.google.com/citations?user=YOUR_SCHOLAR_ID" target="_blank" rel="noopener" aria-label="Google Scholar">
+    <li><a href="https://scholar.google.com/citations?hl=en&amp;user=jQc4s4kAAAAJ" target="_blank" rel="noopener" aria-label="Google Scholar">
       <svg viewBox="0 0 24 24"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.84 3.7A8 8 0 0 1 12 9a8 8 0 0 1 7.16 4.2L24 9.5z"/></svg></a></li>
     <li><a href="https://people.epfl.ch/abdellah.rahmani" target="_blank" rel="noopener" aria-label="EPFL page">
       <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 2c.7 0 1.8 1.2 2.5 3.6.2.7.4 1.5.5 2.4H9c.1-.9.3-1.7.5-2.4C10.2 5.2 11.3 4 12 4zM8.6 4.7C8.1 5.9 7.7 7.4 7.5 9H4.6a8 8 0 0 1 4-4.3zM4.1 11h3.2c-.1.7-.1 1.3-.1 2s0 1.3.1 2H4.1a8 8 0 0 1 0-4zm.5 6h2.9c.2 1.6.6 3.1 1.1 4.3a8 8 0 0 1-4-4.3zM12 20c-.7 0-1.8-1.2-2.5-3.6-.2-.7-.4-1.5-.5-2.4h6c-.1.9-.3 1.7-.5 2.4C13.8 18.8 12.7 20 12 20zm3.4-.7c.5-1.2.9-2.7 1.1-4.3h2.9a8 8 0 0 1-4 4.3zM16.7 13c.1-.7.1-1.3.1-2s0-1.3-.1-2h3.2a8 8 0 0 1 0 4h-3.2zm-.2-6c-.2-1.6-.6-3.1-1.1-4.3a8 8 0 0 1 4 4.3h-2.9z"/></svg></a></li>
@@ -325,6 +359,7 @@
     <p class="intro h-item">Hi, my name is</p>
     <h1 class="h-item">Abdellah Rahmani.</h1>
     <h2 class="h-item">I make AI <span id="typed"></span><span class="caret">|</span></h2>
+    <p class="h-item">PhD candidate at <span class="hl">EPFL</span> and Student Researcher at <span class="hl">Google DeepMind</span>. I study how models structure and allocate computation, from causal time series to adaptive reasoning.</p>
     <a class="cta h-item" href="#publications">View my work</a>
   </section>
 
@@ -333,31 +368,65 @@
     <div class="section-head"><h2><span class="num">01.</span>About Me</h2></div>
     <div class="about-grid">
       <div>
-        <p>I am a PhD candidate at <a href="https://www.epfl.ch" target="_blank" rel="noopener">EPFL</a>, advised by Prof. <a href="https://people.epfl.ch/pascal.frossard" target="_blank" rel="noopener">Pascal Frossard</a>. My research studies how sequence models should structure and allocate their computation. My early work includes <strong>Meta-GNN</strong>, an efficient meta-learned model that personalizes to each epileptic patient from only a few adaptation steps. Asking where such efficiency ultimately comes from led me to structure: I developed the <strong data-mascot="beaver">CASTOR</strong>, <strong data-mascot="ghost">FANTOM</strong>, and <strong data-mascot="cheese">Cheesefill</strong> frameworks to learn the causal structure underlying multivariate time series, in the challenging regime of non-stationary and missing data.</p>
-        <p>Currently, my research brings conditional structure to foundation models: I build deep recurrent architectures that leverage dynamic routing and test-time scaling, so that computation grows with the difficulty of the reasoning problem. I am also a Student Researcher at <a href="https://deepmind.google" target="_blank" rel="noopener">Google DeepMind</a> London, focusing on in-context and prequential learning for LLMs.</p>
-        <p>Before joining EPFL, I completed my Master's degree at ENS Paris-Saclay (<a href="https://www.master-mva.com" target="_blank" rel="noopener">Mathematics, Vision, Learning: MVA</a>) and gained industry experience as a research intern at <a href="https://research.deezer.com" target="_blank" rel="noopener">Deezer Research</a>.</p>
+        <p>I am a PhD candidate at <a href="https://www.epfl.ch" target="_blank" rel="noopener">EPFL</a>, advised by Prof. <a href="https://people.epfl.ch/pascal.frossard" target="_blank" rel="noopener">Pascal Frossard</a>. My research asks how sequence models should structure and allocate their computation.</p>
+        <p>My early work on <strong>Meta-GNN</strong> explored how to personalize seizure detection to each patient with just a few adaptation steps. I then developed <strong data-mascot="beaver">CASTOR</strong>, <strong data-mascot="ghost">FANTOM</strong>, and <strong data-mascot="cheese">Cheesefill</strong> to learn causal structure in multivariate time series, including non-stationary data and incomplete observations.</p>
+        <p>Today, I bring conditional computation to foundation models through deep recurrent architectures, dynamic routing, and test-time scaling. In <strong data-mascot="lol">Library of Layers (LoL)</strong>, we let a model choose the order of its transformer layers at runtime, adapting its computation to the problem at hand.</p>
+        <p>I am also a Student Researcher at <a href="https://deepmind.google" target="_blank" rel="noopener">Google DeepMind</a> in London, working on in-context and prequential learning for LLMs. Before EPFL, I completed the <a href="https://www.master-mva.com" target="_blank" rel="noopener">MVA master's at ENS Paris-Saclay</a> with highest honors and worked on cross-domain recommendation at <a href="https://research.deezer.com" target="_blank" rel="noopener">Deezer Research</a>.</p>
         <p>A few topics I work on:</p>
         <ul class="skills">
           <li>Causal structure learning</li>
-          <li>Time-series modeling</li>
-          <li>Dynamic routing &amp; MoE</li>
+          <li>Temporal data &amp; missingness</li>
+          <li>Dynamic layer routing</li>
           <li>Test-time scaling</li>
-          <li>Foundation models &amp; LLMs</li>
+          <li>In-context &amp; prequential learning</li>
           <li>Meta-learning</li>
         </ul>
-        <p style="margin-top:20px;font-size:16px;">Outside research, I'm a part-time rapper and writer, and I play football, padel, and swim.</p>
+        <p style="margin-top:20px;font-size:16px;">Outside research, I write and rap, play football and padel, and swim.</p>
       </div>
       <div class="aside-card">
         <div class="avatar-wrap">
           <div class="frame">
             <img src="me.jpg" alt="Portrait of Abdellah Rahmani" onerror="this.style.display='none'" />
           </div>
+          <div class="pixel-portrait"><canvas data-sprite="me" data-scale="2" role="img" aria-label="Pixel Abdellah: dark wavy hair, beard, navy hoodie, and conference badge"></canvas></div>
         </div>
         <ul class="facts">
-          <li>Based in Lausanne, Switzerland</li>
-          <li>Student Researcher @ Google DeepMind, London</li>
-          <li>Languages: Arabic, English, French</li>
+          <li>PhD candidate · EPFL, Lausanne</li>
+          <li>Google DeepMind, London · Aug–Dec 2026</li>
+          <li>Arabic: native · English &amp; French: fluent</li>
         </ul>
+        <h3 class="sub-head">Tools I use</h3>
+        <ul class="facts">
+          <li>Python, MySQL, Java, Spark</li>
+          <li>PyTorch, JAX, Keras</li>
+          <li>Unix, Git, Docker</li>
+        </ul>
+      </div>
+    </div>
+    <div class="companions" aria-labelledby="companions-title">
+      <h3 class="sub-head" id="companions-title">A little character in my research</h3>
+      <p class="companion-hint">Meet the projects. Pick a companion to hear its side of the story.</p>
+      <div class="companion-grid">
+        <button type="button" class="companion" data-mascot="beaver" aria-pressed="false">
+          <canvas data-sprite="beaver" aria-hidden="true"></canvas>
+          <strong>CASTOR</strong><span>Finding structure</span>
+        </button>
+        <button type="button" class="companion" data-mascot="ghost" aria-pressed="false">
+          <canvas data-sprite="ghost" aria-hidden="true"></canvas>
+          <strong>FANTOM</strong><span>Following the flow</span>
+        </button>
+        <button type="button" class="companion" data-mascot="cheese" aria-pressed="false">
+          <canvas data-sprite="cheese" aria-hidden="true"></canvas>
+          <strong>Cheesefill</strong><span>Mind the gaps</span>
+        </button>
+        <button type="button" class="companion" data-mascot="lol" aria-pressed="true">
+          <canvas data-sprite="lol" aria-hidden="true"></canvas>
+          <strong>LoL</strong><span>Choosing the next layer</span>
+        </button>
+      </div>
+      <div class="companion-quote" role="status" aria-live="polite" aria-atomic="true">
+        <p id="companion-quote">“Same layers. A different path for every problem.”</p>
+        <cite id="companion-credit">— LoL, Library of Layers</cite>
       </div>
     </div>
   </section>
@@ -367,35 +436,42 @@
     <div class="section-head"><h2><span class="num">02.</span>Publications</h2></div>
 
     <div class="pub">
-      <span class="venue">PREPRINT · 2026</span><span class="tag" data-mascot="cheese">Cheesefill</span>
+      <span class="venue">SUBMITTED · 2026</span><span class="tag" data-mascot="lol">LoL</span>
+      <h3>Library of Layers (LoL): Adaptively Ordering Transformer Layers at Runtime</h3>
+      <p class="authors"><strong>A. Rahmani*</strong>, S. McLeish*, A. Li, S. Lotfi, P. Frossard, M. Goldblum<br><span>* Equal contribution</span></p>
+      <p class="desc">A learned router selects the next transformer layer from a shared library. Changing the library size connects layer reuse and sparse computation; learned layer orders reflect different solution strategies and language patterns.</p>
+      <div class="links"><a href="Learning_order_of_Layers.pdf" target="_blank" rel="noopener">Paper ↗</a></div>
+    </div>
+
+    <div class="pub">
+      <span class="venue">NeurIPS · 2026</span><span class="tag" data-mascot="cheese">Cheesefill</span>
       <h3>Causal Heteroscedastic Structure Learning from Incomplete Temporal Data</h3>
-      <p class="authors"><strong>A. Rahmani</strong>, Pascal Frossard</p>
-      <p class="desc">Recovers the causal structure of multivariate time series when noise is heteroscedastic and observations are missing — the regime where most structure-learning methods break down.</p>
-      <div class="links"><span class="muted">Coming soon</span></div>
+      <p class="authors"><strong>A. Rahmani</strong>, P. Frossard</p>
+      <p class="desc">Learns causal structure from incomplete multivariate time series with heteroscedastic noise, addressing missing observations and changing noise variance.</p>
     </div>
 
     <div class="pub">
       <span class="venue">NeurIPS · 2025</span><span class="tag" data-mascot="ghost">FANTOM</span>
-      <h3>A Flow-Based Approach for Dynamic Temporal Causal Models with Non-Gaussian or Heteroscedastic Noise</h3>
-      <p class="authors"><strong>A. Rahmani</strong>, Pascal Frossard</p>
-      <p class="desc">Uses normalizing flows to model dynamic temporal causal relationships under realistic, non-Gaussian and heteroscedastic noise.</p>
-      <div class="links"><a href="#" target="_blank" rel="noopener">Paper ↗</a></div>
+      <h3>Flow Based Approach for Dynamic Temporal Causal Models with Non-Gaussian or Heteroscedastic Noises</h3>
+      <p class="authors"><strong>A. Rahmani</strong>, P. Frossard</p>
+      <p class="desc">Uses normalizing flows to learn temporal regimes and their causal graphs from multivariate time series with non-Gaussian or heteroscedastic noise.</p>
+      <div class="links"><a href="https://proceedings.neurips.cc/paper_files/paper/2025/hash/0c573ef147721b7f9d1dbfe549ddd25f-Abstract-Conference.html" target="_blank" rel="noopener">Paper ↗</a></div>
     </div>
 
     <div class="pub">
       <span class="venue">AISTATS · 2025</span><span class="tag" data-mascot="beaver">CASTOR</span>
       <h3>Causal Temporal Regime Structure Learning</h3>
-      <p class="authors"><strong>A. Rahmani</strong>, Pascal Frossard</p>
-      <p class="desc">Jointly discovers distinct temporal regimes and the causal graph governing each, for non-stationary multivariate time series.</p>
-      <div class="links"><a href="#" target="_blank" rel="noopener">Paper ↗</a></div>
+      <p class="authors"><strong>A. Rahmani</strong>, P. Frossard</p>
+      <p class="desc">Jointly discovers temporal regimes and the causal graph governing each one in non-stationary multivariate time series.</p>
+      <div class="links"><a href="https://proceedings.mlr.press/v258/rahmani25a.html" target="_blank" rel="noopener">Paper ↗</a></div>
     </div>
 
     <div class="pub">
       <span class="venue">ICASSP · 2023</span><span class="tag">Meta-GNN</span>
       <h3>A Meta-GNN Approach to Personalized Seizure Detection and Classification</h3>
-      <p class="authors"><strong>A. Rahmani</strong>, Arun Venkitaraman, Pascal Frossard</p>
-      <p class="desc">A meta-learned graph neural network that adapts an epileptic-seizure detector to each patient from only a few examples.</p>
-      <div class="links"><a href="#" target="_blank" rel="noopener">Paper ↗</a></div>
+      <p class="authors"><strong>A. Rahmani</strong>, A. Venkitaraman, P. Frossard</p>
+      <p class="desc">A meta-learned graph neural network for patient-specific seizure detection and classification, personalized with only a few adaptation steps.</p>
+      <div class="links"><a href="https://arxiv.org/abs/2211.02642" target="_blank" rel="noopener">Paper ↗</a></div>
     </div>
   </section>
 
@@ -420,42 +496,41 @@
           </ul>
         </div>
         <div class="panel">
-          <h3>Doctoral Researcher <span class="at">@ EPFL (LTS4)</span></h3>
+          <h3>Doctoral Assistant <span class="at">@ EPFL (LTS4)</span></h3>
           <p class="when">Aug 2022 — Present · Lausanne</p>
           <ul>
-            <li>Efficient AI reasoning across modalities, advised by Prof. Pascal Frossard.</li>
-            <li>Causal structure learning for non-stationary and incomplete temporal data.</li>
-            <li>Dynamic routing and test-time scaling for text and vision models.</li>
+            <li>Studying efficient AI reasoning across modalities, advised by Prof. Pascal Frossard.</li>
+            <li>Learning causal structure from non-stationary and incomplete temporal data.</li>
+            <li>Developing dynamic routing and deep recurrent architectures for text and vision.</li>
           </ul>
         </div>
         <div class="panel">
           <h3>Research Scientist Intern <span class="at">@ Deezer Research</span></h3>
           <p class="when">Apr 2021 — Sep 2021 · Paris</p>
           <ul>
-            <li>Improved podcast recommendations by leveraging users' music-listening patterns.</li>
-            <li>Built cross-domain recommendation methods using domain adaptation and meta-learning.</li>
+            <li>Explored podcast recommendation using listeners' music consumption patterns.</li>
+            <li>Implemented cross-domain recommendation methods using domain adaptation and meta-learning.</li>
           </ul>
         </div>
         <div class="panel">
           <h3>Applied Scientist Intern <span class="at">@ Silex France</span></h3>
           <p class="when">Apr 2020 — Sep 2020 · Antibes</p>
           <ul>
-            <li>Implemented unsupervised graph representation learning (Metapath2vec) for search.</li>
-            <li>Combined graph structure with semantic signals from product descriptions and queries (Neural IR meets graph embedding).</li>
+            <li>Explored graph embeddings for search engines.</li>
           </ul>
         </div>
         <div class="panel">
           <h3>Part-time Researcher <span class="at">@ CRIStAL</span></h3>
           <p class="when">Oct 2019 — Mar 2020 · Lille</p>
           <ul>
-            <li>Applied domain adaptation to deep models for image-manipulation detection, with Patrick Bas.</li>
+            <li>Applied domain adaptation to deep learning models for image-manipulation detection, under the guidance of Patrick Bas.</li>
           </ul>
         </div>
         <div class="panel">
-          <h3>Data Science Intern <span class="at">@ Forafric</span></h3>
+          <h3>Data Science Intern <span class="at">@ Forafric Maroc</span></h3>
           <p class="when">Apr 2019 — Aug 2019 · Casablanca</p>
           <ul>
-            <li>Built crop-identification models from satellite imagery.</li>
+            <li>Built machine learning models to identify crops from satellite images.</li>
           </ul>
         </div>
       </div>
@@ -468,23 +543,23 @@
     <ul class="edu">
       <li>
         <span class="years">2022 — Present</span>
-        <span><span class="deg">PhD, Electrical Engineering (AI &amp; Machine Learning)</span><br><span class="place">EPFL, Lausanne</span></span>
+        <span><span class="deg">PhD, Electrical Engineering — AI &amp; Machine Learning</span><br><span class="place">EPFL, Lausanne</span></span>
       </li>
       <li>
         <span class="years">2020 — 2021</span>
-        <span><span class="deg">MSc — Mathematics, Vision, Learning (MVA), highest honors</span><br><span class="place">ENS Paris-Saclay</span></span>
+        <span><span class="deg">MSc, Mathematics, Vision, Learning (MVA)</span><br><span class="place">ENS Paris-Saclay · Highest honors</span></span>
       </li>
       <li>
         <span class="years">2019 — 2020</span>
-        <span><span class="deg">Engineering — AI &amp; Data Science (top 10% of 280)</span><br><span class="place">École Centrale Lille</span></span>
+        <span><span class="deg">Final-year Engineering, AI &amp; Data Science</span><br><span class="place">École Centrale Lille · Top 10% of 280 students<br>Additional mathematics at the University of Lille: functional analysis, stochastic processes, and high-dimensional probability.</span></span>
       </li>
       <li>
         <span class="years">2017 — 2019</span>
-        <span><span class="deg">MEng — Data Science &amp; AI</span><br><span class="place">École Centrale Casablanca</span></span>
+        <span><span class="deg">Master of Engineering, Data Science &amp; AI</span><br><span class="place">École Centrale Casablanca</span></span>
       </li>
       <li>
         <span class="years">2014 — 2017</span>
-        <span><span class="deg">Classes Préparatoires (rank 104 / 3000)</span><br><span class="place">Meknès</span></span>
+        <span><span class="deg">Classes Préparatoires</span><br><span class="place">Meknès · Intensive preparation for engineering schools · Rank 104 / 3,000</span></span>
       </li>
     </ul>
   </section>
@@ -496,48 +571,54 @@
       <div>
         <h3 class="sub-head">Awards</h3>
         <ul class="clist">
-          <li><b>Doc.Mobility Grant</b> — 7,000 CHF, EPFL Doctoral School</li>
+          <li><b>Doc.Mobility Grant</b> — CHF 7,000, EPFL Doctoral School, for deep recursive models in collaboration with Columbia University</li>
           <li><b>3rd place</b> — My Thesis in 180 Seconds, EPFL EDEE</li>
-          <li><b>Master's Valorization Scholarship</b> — 10,000 CHF, EPFL LTS4</li>
+          <li><b>Master's Valorization Scholarship</b> — CHF 10,000, EPFL LTS4</li>
           <li><b>Top 10%</b> of 280 students — École Centrale Lille</li>
+          <li><b>Top student</b> among 30 — Fleurs d'Orangers High School, Meknès</li>
         </ul>
         <h3 class="sub-head">Service</h3>
         <ul class="clist">
-          <li><b>Reviewer</b> — NeurIPS, ICASSP</li>
+          <li><b>Reviewer</b> — NeurIPS, ICLR, ICASSP</li>
           <li><b>Evaluator</b> — ELLIS PhD program</li>
         </ul>
       </div>
       <div>
-        <h3 class="sub-head">Teaching (TA, EPFL)</h3>
+        <h3 class="sub-head">Teaching &amp; Supervision at EPFL</h3>
         <ul class="clist">
-          <li><b>Network Machine Learning</b> — Spring '23, '24, '25</li>
-          <li><b>Signal Processing</b> — Fall '25</li>
-          <li><b>Optimization</b> — Fall '23</li>
-          <li><b>Linear Algebra</b> — Fall '22</li>
-          <li>Supervised 2 student projects on representation learning from EEG data</li>
+          <li><b>Network Machine Learning</b> — Spring 2023, 2024, 2025</li>
+          <li><b>Signal Processing</b> — Fall 2025</li>
+          <li><b>Optimization</b> — Fall 2023</li>
+          <li><b>Linear Algebra</b> — Fall 2022</li>
+          <li>Supervised <b>2 student projects</b> on representation learning from EEG data — Spring 2023 and Fall 2024</li>
+        </ul>
+        <h3 class="sub-head">Kaggle Challenges</h3>
+        <ul class="clist">
+          <li><b>3rd of 70 teams</b> — DNA sequence classification for transcription factor binding sites using kernel methods, ENS Paris-Saclay · Mar–Apr 2021</li>
+          <li><b>1st of 10 teams</b> — Hand gesture recognition using deep learning, Centrale Lille · Mar–Apr 2020</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- BLOG (empty) -->
+  <!-- BLOG -->
   <section id="blog" class="reveal">
     <div class="section-head"><h2><span class="num">06.</span>Blog</h2></div>
     <div class="pub">
-      <span class="venue">PREPRINT · 2026</span><span class="tag">ALE</span>
-      <h3>Adaptive Layer Execution: Learning to Order Computation in Language Models</h3>
-      <p class="authors"><strong>A. Rahmani</strong>, Sean McLeish, Ang Li, Sanae Lotfi, Pavel Izmailov, Pascal Frossard, Micah Goldblum</p>
-      <p class="desc">Introduces ALE, an approach for building deep recurrent models with a single shared router that decides which transformer layers to call, in what order, and how many times — scaling test-time computation while tailoring processing to each prompt.</p>
-      <div class="links"><a href="ALE_paper.pdf" target="_blank" rel="noopener">PDF ↗</a></div>
+      <span class="venue">RESEARCH NOTE · 2026</span><span class="tag" data-mascot="lol">LoL</span>
+      <h3>What if a transformer could choose its next layer?</h3>
+      <p class="desc">Most language models execute their layers in a fixed order. Library of Layers gives a learned router a shared collection of transformer blocks and lets it decide which one to use next. A small library encourages reuse; a larger library enables sparse computation.</p>
+      <p class="desc">On sudoku and maze tasks, LoL learns different layer orders for different solution strategies. In multilingual text, its routing patterns vary with language and script. The goal is computation that adapts to what a model is trying to solve.</p>
+      <blockquote class="research-quote"><p>“Same layers. A different path for every problem.”</p><footer>— LoL mascot</footer></blockquote>
+      <div class="links"><a href="Learning_order_of_Layers.pdf" target="_blank" rel="noopener">Read the LoL paper ↗</a></div>
     </div>
-    <p class="extra-note">More writing coming soon.</p>
   </section>
 
   <!-- CONTACT -->
   <section id="contact" class="reveal">
-    <span class="num">07. What's Next?</span>
+    <span class="num">07. Let's Connect</span>
     <h2>Get In Touch</h2>
-    <p>I'm always happy to talk about efficient reasoning, causal structure learning, or foundation models — whether it's research, collaboration, or just to connect. My inbox is open.</p>
+    <p>Interested in adaptive computation, causal structure learning, or efficient foundation models? I'm happy to exchange ideas and discuss research collaborations.</p>
     <a class="cta" href="mailto:abdellah.rahmani@epfl.ch">Say Hello</a>
   </section>
 
@@ -558,7 +639,7 @@
   var loader = document.getElementById('loader');
   var typedEl = document.getElementById('typed');
   var caret = document.querySelector('.caret');
-  var phrases = ["reason efficiently", "understand causality", "learn causal reasoning and structures"];
+  var phrases = ["reason efficiently", "adapt its computation", "learn causal structure"];
 
   function runTyping(){
     var ti = 0, ci = 0, deleting = false;
@@ -596,10 +677,21 @@
   // ----- Mobile menu -----
   var burger = document.getElementById('hamburger');
   var navlist = document.getElementById('navlist');
-  burger.addEventListener('click', function(){ navlist.classList.toggle('open'); });
+  function setMenu(open) {
+    navlist.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    navlist.inert = window.innerWidth <= 980 && !open;
+  }
+  setMenu(false);
+  burger.addEventListener('click', function(){ setMenu(!navlist.classList.contains('open')); });
   navlist.querySelectorAll('a').forEach(function(a){
-    a.addEventListener('click', function(){ navlist.classList.remove('open'); });
+    a.addEventListener('click', function(){ setMenu(false); });
   });
+  document.addEventListener('keydown', function(event){
+    if (event.key === 'Escape' && navlist.classList.contains('open')) { setMenu(false); burger.focus(); }
+  });
+  window.addEventListener('resize', function(){ setMenu(false); });
 
   // ----- Scroll-spy active nav -----
   var sections = Array.prototype.slice.call(document.querySelectorAll('main section[id]'));
@@ -634,268 +726,8 @@
     });
   });
 
-  // ----- Pixel art: monogram + walking cat -----
-  (function(){
-    var css = getComputedStyle(document.documentElement);
-    var accent = (css.getPropertyValue('--olive') || '').trim() || '#45C0C3';
-
-    function fit(cv, w, h, scale){
-      var dpr = window.devicePixelRatio || 1;
-      cv.width = w * scale * dpr; cv.height = h * scale * dpr;
-      cv.style.width = (w * scale) + 'px'; cv.style.height = (h * scale) + 'px';
-      var ctx = cv.getContext('2d');
-      ctx.scale(dpr, dpr); ctx.imageSmoothingEnabled = false;
-      return ctx;
-    }
-
-    function paint(ctx, grid, pal, scale, w, h, flip){
-      ctx.clearRect(0, 0, w * scale, h * scale);
-      for (var y = 0; y < grid.length; y++){
-        for (var x = 0; x < grid[y].length; x++){
-          var col = pal[grid[y].charAt(x)];
-          if (!col) continue;
-          ctx.fillStyle = col;
-          ctx.fillRect((flip ? w - 1 - x : x) * scale, y * scale, scale, scale);
-        }
-      }
-    }
-
-    // --- monogram ---
-    var LOGO = [
-      '.###..####.',
-      '#...#.#...#',
-      '#...#.#...#',
-      '#####.####.',
-      '#...#.#..#.',
-      '#...#.#...#',
-      '#...#.#...#'
-    ];
-    var logoCv = document.getElementById('logoCanvas');
-    if (logoCv) paint(fit(logoCv, 11, 7, 2), LOGO, { '#': accent }, 2, 11, 7, false);
-
-    // --- pixel me ---
-    var box = document.getElementById('mascot');
-    var meCv = document.getElementById('meCanvas');
-    var buddyCv = document.getElementById('buddyCanvas');
-    var bubble = document.getElementById('bubble');
-    if (!box || !meCv) return;
-
-    var PAL = {
-      o: '#06222B', h: '#241C16', b: '#2E241B', s: '#D8A177', S: '#B57C4E', e: '#14100C',
-      j: '#33517A', v: '#C6B2E8', w: '#F2F2F0', p: '#363640',
-      g: '#DCE8EA', m: '#06222B', n: '#F2C14E', N: '#D9A227',
-      t: '#8A5A34', T: '#6B4326', r: '#5A3A22'
-    };
-    var W = 18, H = 20, PX = 4;
-
-    var HEAD = [
-      '......oooooo......',
-      '.....ohhhhhhho....',
-      '....ohhhhhhhhho...',
-      '....ohhssssshho...',
-      '....ohsssssssho...',
-      '....ohsesssesho...',
-      '....ohsssSsssho...',
-      '....ohbsssssbho...',
-      '.....obbbbbbbo....',
-      '......obbbbo......',
-      '......osssso......'
-    ];
-    var TORSO = [
-      '....ojjjvvjjjo....',
-      '....ojjvwwvjjo....',
-      '....ojjjwwjjjo....',
-      '....ojjjwwjjjo....',
-      '....ojjjjjjjjo....',
-      '....ojjjjjjjjo....'
-    ];
-    var LEGS       = ['....oppppppppo....', '....oppo..oppo....', '....owwo..owwo....'];
-    var LEGS_WIDE  = ['....oppppppppo....', '...oppo....oppo...', '...owwo....owwo...'];
-    var LEGS_TIGHT = ['....oppppppppo....', '.....oppoppo......', '.....owwowwo......'];
-
-    function stamp(grid, px){
-      var g = grid.slice();
-      for (var i = 0; i < px.length; i++){
-        var x = px[i][0], y = px[i][1];
-        g[y] = g[y].substring(0, x) + px[i][2] + g[y].substring(x + 1);
-      }
-      return g;
-    }
-    function body(legs){ return HEAD.concat(TORSO, legs); }
-
-    var ARM_L = [], ARM_R = [];
-    for (var ay = 11; ay <= 15; ay++){
-      ARM_L.push([1, ay, 'o'], [2, ay, 'j'], [3, ay, 'j']);
-      ARM_R.push([14, ay, 'j'], [15, ay, 'j'], [16, ay, 'o']);
-    }
-    ARM_L.push([1,16,'o'],[2,16,'s'],[3,16,'s'],[1,17,'o'],[2,17,'o'],[3,17,'o']);
-    ARM_R.push([14,16,'s'],[15,16,'s'],[16,16,'o'],[14,17,'o'],[15,17,'o'],[16,17,'o']);
-    // right arm raised, hand up beside the head
-    var ARM_UP = [[14,11,'j'],[15,11,'j'],[16,11,'o'],
-                  [14,10,'o'],[15,10,'j'],[16,10,'j'],[17,10,'o'],
-                  [14,9,'o'],[15,9,'j'],[16,9,'j'],[17,9,'o'],
-                  [14,8,'o'],[15,8,'s'],[16,8,'s'],[17,8,'o'],
-                  [14,7,'o'],[15,7,'s'],[16,7,'s'],[17,7,'o'],
-                  [15,6,'o'],[16,6,'o']];
-
-    function arms(g){ return stamp(stamp(g, ARM_L), ARM_R); }
-    var IDLE   = arms(body(LEGS));
-    var BLINK  = stamp(IDLE, [[7,5,'h'],[11,5,'h']]);
-    var WALK_A = arms(body(LEGS_WIDE));
-    var WALK_B = arms(body(LEGS_TIGHT));
-    var WAVE_A = stamp(stamp(body(LEGS), ARM_L), ARM_UP);
-    var WAVE_B = stamp(WAVE_A, [[14,7,'.'],[14,8,'.'],[17,7,'s'],[17,8,'s'],[15,6,'.'],[16,6,'o'],[17,6,'o']]);
-
-    var GHOST = [
-      '..................','..................',
-      '......oooooo......',
-      '.....oggggggo.....',
-      '....oggggggggo....',
-      '...oggggggggggo...',
-      '...oggeeggeeggo...',
-      '...oggeeggeeggo...',
-      '...oggggggggggo...',
-      '...ogggommogggo...',
-      '...oggggmmggggo...',
-      '...oggggggggggo...','...oggggggggggo...','...oggggggggggo...',
-      '...oggggggggggo...','...oggggggggggo...','...oggggggggggo...','...oggggggggggo...',
-      '...oggooggooggo...',
-      '...oo.oo..oo.oo...'
-    ];
-
-    var BEAVER = [
-      '..................','..................','..................',
-      '....oo.....oo.....',
-      '...otto...otto....',
-      '..ottttttttttto...',
-      '..ottttttttttto...',
-      '..ottetttttetto...',
-      '..ottttttttttto...',
-      '..ottttTTTTttto...',
-      '..otttwwwwwttto...',
-      '...ottttttttto....',
-      '..ottttttttttto...',
-      '..ottttttttttoooo.',
-      '..ottttttttttorrro',
-      '..ottttttttttorrro',
-      '..ottttttttttoooo.',
-      '...oTTo...oTTo....',
-      '..................','..................'
-    ];
-
-    var CHEESE = [
-      '......oo....',
-      '.....onno...',
-      '....onnnno..',
-      '...onnNnnno.',
-      '..onnnnnnnno',
-      '..onennennno',
-      '..onnnnnnnno',
-      '..onnnmmnnno',
-      '..onnNnnnNno',
-      '..onnnnnnnno',
-      '..oooooooooo'
-    ];
-
-    var ctx = fit(meCv, W, H, PX);
-    if (buddyCv) paint(fit(buddyCv, 12, 11, PX), CHEESE, PAL, PX, 12, 11, false);
-
-    var HI    = "Hi! I'm Abdellah 👋";
-    var ABOUT = "I'm a PhD candidate at EPFL and a Student Researcher at Google DeepMind.";
-    var LINES = {
-      cheese: "Hi! I'm Cheesefill 🧀",
-      ghost:  "Boo! I'm FANTOM 👻",
-      beaver: "Castor — that's beaver in French 🦫"
-    };
-
-    var mode = 'wave', morph = null, x = 60, dir = 1, tAnim = 0, lastScroll = 0, bob = 0;
-    var bubbleUntil = 0, waveUntil = 0;
-
-    function say(text, ms){
-      bubble.textContent = text;
-      box.classList.add('talking');
-      bubbleUntil = ms ? performance.now() + ms : Infinity;
-      var lim = window.innerWidth - 300;          // keep the bubble on screen
-      if (x > lim) x = Math.max(12, lim);
-    }
-    function hush(){ box.classList.remove('talking'); bubbleUntil = 0; }
-
-    // hovering a project name morphs him (or summons the cheese)
-    Array.prototype.forEach.call(document.querySelectorAll('[data-mascot]'), function(el){
-      var kind = el.getAttribute('data-mascot');
-      el.addEventListener('mouseenter', function(){
-        morph = (kind === 'cheese') ? null : kind;
-        box.classList.toggle('has-buddy', kind === 'cheese');
-        tAnim = 0;
-        say(LINES[kind], 0);
-      });
-      el.addEventListener('mouseleave', function(){
-        morph = null; box.classList.remove('has-buddy'); hush();
-      });
-    });
-
-    if (prefersReduced) {
-      box.style.transform = 'translateX(60px)';
-      paint(ctx, IDLE, PAL, PX, W, H, false);
-      say(HI, 0);
-      return;
-    }
-
-    // he introduces himself as soon as the page opens
-    var prev = performance.now();
-    waveUntil = prev + 4000; lastScroll = prev;
-    say(HI, 4000);
-
-    window.addEventListener('scroll', function(){
-      lastScroll = performance.now();
-      if (mode === 'idle' && !morph && !bubbleUntil) mode = 'walk';
-    }, { passive: true });
-
-    // ...and says what he does when you reach About
-    var about = document.getElementById('about');
-    if (about) {
-      var told = false;
-      new IntersectionObserver(function(entries){
-        entries.forEach(function(e){
-          if (e.isIntersecting && !told) { told = true; mode = 'idle'; say(ABOUT, 7000); }
-          else if (!e.isIntersecting) { told = false; }
-        });
-      }, { threshold: 0.25 }).observe(about);
-    }
-
-    function loop(now){
-      var dt = Math.min(now - prev, 60); prev = now;
-      if (bubbleUntil && now > bubbleUntil) hush();
-
-      if (mode === 'wave' && now > waveUntil) { mode = 'walk'; lastScroll = now; }
-      if (mode === 'walk' && now - lastScroll > 2600) mode = 'idle';
-
-      var moving = (mode === 'walk' && !morph && !bubbleUntil);
-      if (moving) {
-        x += dir * 0.038 * dt;
-        var maxX = window.innerWidth - W * PX - 20;
-        if (x >= maxX) { x = maxX; dir = -1; }
-        if (x <= 12) { x = 12; dir = 1; }
-      }
-
-      tAnim += dt;
-      var g;
-      if (morph === 'ghost')        { g = GHOST;  bob = Math.floor(tAnim / 420) % 2 ? 2 : 0; }
-      else if (morph === 'beaver')  { g = BEAVER; bob = Math.floor(tAnim / 520) % 2; }
-      else if (mode === 'wave')     { g = Math.floor(tAnim / 250) % 2 ? WAVE_B : WAVE_A; bob = 0; }
-      else if (moving) {
-        var f = Math.floor(tAnim / 150) % 4;
-        g = (f === 1) ? WALK_A : (f === 3 ? WALK_B : IDLE);
-        bob = (f % 2) ? 1 : 0;
-      }
-      else { g = (tAnim % 4800 < 4600) ? IDLE : BLINK; bob = 0; }
-
-      paint(ctx, g, PAL, PX, W, H, false);
-      box.style.transform = 'translate(' + Math.round(x) + 'px,' + (-bob) + 'px)';
-      requestAnimationFrame(loop);
-    }
-    requestAnimationFrame(loop);
-  })();
 </script>
+<script src="sprites.js"></script>
+<script src="mascots.js"></script>
 </body>
 </html>
