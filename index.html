@@ -440,7 +440,6 @@
       <h3>Library of Layers (LoL): Adaptively Ordering Transformer Layers at Runtime</h3>
       <p class="authors"><strong>A. Rahmani*</strong>, S. McLeish*, A. Li, S. Lotfi, P. Frossard, M. Goldblum<br><span>* Equal contribution</span></p>
       <p class="desc">A learned router selects the next transformer layer from a shared library. Changing the library size connects layer reuse and sparse computation; learned layer orders reflect different solution strategies and language patterns.</p>
-      <div class="links"><a href="Learning_order_of_Layers.pdf" target="_blank" rel="noopener">Paper ↗</a></div>
     </div>
 
     <div class="pub">
@@ -605,12 +604,11 @@
   <section id="blog" class="reveal">
     <div class="section-head"><h2><span class="num">06.</span>Blog</h2></div>
     <div class="pub">
-      <span class="venue">RESEARCH NOTE · 2026</span><span class="tag" data-mascot="lol">LoL</span>
-      <h3>What if a transformer could choose its next layer?</h3>
-      <p class="desc">Most language models execute their layers in a fixed order. Library of Layers gives a learned router a shared collection of transformer blocks and lets it decide which one to use next. A small library encourages reuse; a larger library enables sparse computation.</p>
-      <p class="desc">On sudoku and maze tasks, LoL learns different layer orders for different solution strategies. In multilingual text, its routing patterns vary with language and script. The goal is computation that adapts to what a model is trying to solve.</p>
-      <blockquote class="research-quote"><p>“Same layers. A different path for every problem.”</p><footer>— LoL mascot</footer></blockquote>
-      <div class="links"><a href="Learning_order_of_Layers.pdf" target="_blank" rel="noopener">Read the LoL paper ↗</a></div>
+      <span class="venue">RESEARCH NOTE · 2026</span><span class="tag">ALE</span>
+      <h3>Adaptive Layer Execution: Learning to Order Computation in Language Models</h3>
+      <p class="authors"><strong>A. Rahmani</strong>, Sean McLeish, Ang Li, Sanae Lotfi, Pavel Izmailov, Pascal Frossard, Micah Goldblum</p>
+      <p class="desc">Adaptive Layer Execution (ALE) uses a shared router to choose which transformer layers to call, in what order, and how often. By reusing a pool of layers across recurrent steps, it adapts computation to each input while keeping the model parameter-efficient.</p>
+      <div class="links"><a href="ALE_paper.pdf" target="_blank" rel="noopener">Read the ALE paper ↗</a></div>
     </div>
   </section>
 
